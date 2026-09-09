@@ -10,190 +10,72 @@
   <script src="https://unpkg.com/lucide@latest"></script>
 
   <style>
-    * { box-sizing: border-box; }
-
-    body {
-      background:
-        radial-gradient(circle at 10% 0%, rgba(79,70,229,.14), transparent 28rem),
-        radial-gradient(circle at 90% 10%, rgba(14,165,233,.08), transparent 24rem),
-        #080d1a;
-    }
-
-    .glass {
-      background: rgba(15,23,42,.72);
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
-    }
-
-    .hero-grid {
-      background-image:
-        linear-gradient(rgba(99,102,241,.055) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(99,102,241,.055) 1px, transparent 1px);
-      background-size: 42px 42px;
-    }
-
-    .hero-glow {
-      background: radial-gradient(circle, rgba(99,102,241,.16), transparent 68%);
-    }
-
-    .card {
-      transition: transform .25s ease, border-color .25s ease,
-                  box-shadow .25s ease;
-    }
-
-    .card:hover {
-      transform: translateY(-6px);
-      border-color: rgba(99,102,241,.55);
-      box-shadow: 0 18px 45px rgba(0,0,0,.25);
-    }
-
+    /* Estilos utilitários específicos dos Cards e Badges */
     .skill-badge {
-      background: rgba(99,102,241,.10);
-      border: 1px solid rgba(99,102,241,.22);
+      font-size: 0.7rem;
+      padding: 0.2rem 0.5rem;
+      border-radius: 9999px;
+      background-color: rgba(99, 102, 241, 0.15);
       color: #a5b4fc;
-      padding: 4px 9px;
-      border-radius: 999px;
-      font-size: .68rem;
-      font-weight: 500;
-      display: inline-block;
+      border: 1px solid rgba(99, 102, 241, 0.25);
     }
-
     .btn-disabled {
-      opacity: .45;
+      opacity: 0.5;
       cursor: not-allowed;
-      pointer-events: none;
-    }
-
-    .line-clamp-1 {
-  display: -webkit-box;
-  -webkit-line-clamp: 1;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.line-clamp-2 {
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-    .stat-card {
-      transition: border-color .2s ease, transform .2s ease;
-    }
-
-    .stat-card:hover {
-      transform: translateY(-2px);
-      border-color: rgba(99,102,241,.35);
-    }
-
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .fade-up { animation: fadeUp .45s ease both; }
-
-    @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after {
-        animation-duration: .01ms !important;
-        transition-duration: .01ms !important;
-      }
     }
   </style>
 </head>
 
-<body class="text-slate-100 min-h-screen flex flex-col font-sans">
+<body >
 
-  <!-- NAVBAR -->
-  <header class="glass border-b border-slate-800/80 sticky top-0 z-50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-      <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+  <!-- NAVBAR / BARRA DE PESQUISA (Preservada) -->
+  <header >
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-2">
+        
+        <span class="font-bold text-lg text-white">Portfólio da Turma</span>
+      </div>
 
-        <div class="flex items-center gap-3 w-full md:w-auto">
-          <div class="p-3 bg-indigo-600/15 border border-indigo-500/25 rounded-2xl text-indigo-400">
-            <i data-lucide="graduation-cap" class="w-6 h-6"></i>
-          </div>
-
-          <div>
-            <h1 class="text-xl font-bold tracking-tight text-white">
-              Portfólio da Turma
-            </h1>
-            <p class="text-xs text-slate-400">
-              Talentos, habilidades e oportunidades
-            </p>
-          </div>
-        </div>
-
-        <div class="relative w-full md:w-80">
-          <i data-lucide="search"
-            class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">
-          </i>
-
-          <input
-            type="text"
-            id="search-input"
-            placeholder="Buscar por nome, cargo ou habilidade..."
-            class="w-full pl-9 pr-4 py-2.5 bg-slate-800/80 border border-slate-700 rounded-xl text-sm text-white placeholder-slate-400 focus:outline-none focus:border-indigo-500 transition"
-          >
-        </div>
-
+      <div class="relative w-full md:w-80">
+        <i data-lucide="search" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
+        <input
+          type="text"
+          id="search-input"
+          placeholder="Buscar por nome, cargo ou habilidade..."
+          class="w-full pl-9 pr-4 py-2.5 bg-slate-800/80 border border-slate-700 rounded-xl text-sm text-white placeholder-slate-400 focus:outline-none focus:border-indigo-500 transition"
+        >
       </div>
     </div>
   </header>
 
 
-  <!-- HERO -->
-  <section class="relative overflow-hidden border-b border-slate-800/70">
-    <div class="absolute inset-0 hero-grid pointer-events-none"></div>
-    <div class="absolute -top-40 -left-40 w-96 h-96 hero-glow pointer-events-none"></div>
-    <div class="absolute -top-40 -right-40 w-96 h-96 hero-glow pointer-events-none"></div>
-
-    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-20">
-      <div class="max-w-3xl fade-up">
-
-        <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 text-xs font-medium mb-6">
+  <!-- HERO (Estrutura pronta para estilizar) -->
+  <section >
+    <div class="max-w-7xl mx-auto px-4">
+      <div>
+        <div >
           <span class="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-pulse"></span>
-          <span>Vitrine profissional da turma</span>
+          <span></span>
         </div>
 
-        <h2 class="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white leading-tight">
-          Talentos que transformam
-          <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-cyan-400">
-            ideias em soluções.
-          </span>
+        <h2 >
+           <span ></span>
         </h2>
 
-        <p class="mt-5 text-slate-400 text-base sm:text-lg max-w-2xl leading-relaxed">
-          Conheça os alunos, suas áreas de atuação, habilidades e currículos
-          em uma experiência moderna e profissional.
+        <p >
+          
         </p>
-
-        <div class="flex flex-wrap items-center gap-3 mt-8">
-          <a href="#alunos"
-            class="inline-flex items-center gap-2 px-5 py-3 bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-semibold rounded-xl transition shadow-lg shadow-indigo-600/20">
-            <i data-lucide="users" class="w-4 h-4"></i>
-            <span>Explorar talentos</span>
-          </a>
-
-          <div class="flex items-center gap-2 text-sm text-slate-500">
-            <i data-lucide="sparkles" class="w-4 h-4 text-indigo-400"></i>
-            <span>Conectando pessoas e oportunidades</span>
-          </div>
-        </div>
-
       </div>
     </div>
   </section>
 
 
-  <!-- CONTEÚDO -->
-  <main id="alunos" class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-10">
+  <!-- CONTEÚDO PRINCIPAL -->
+  <main id="alunos" >
 
     <!-- ESTATÍSTICAS -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-10">
-
-      <div class="stat-card bg-slate-900/70 border border-slate-800 rounded-2xl p-5 flex items-center gap-4">
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-10">
+      <div class="bg-slate-900/70 border border-slate-800 rounded-2xl p-5 flex items-center gap-4">
         <div class="p-3 bg-indigo-500/10 text-indigo-400 rounded-xl">
           <i data-lucide="users" class="w-5 h-5"></i>
         </div>
@@ -203,7 +85,7 @@
         </div>
       </div>
 
-      <div class="stat-card bg-slate-900/70 border border-slate-800 rounded-2xl p-5 flex items-center gap-4">
+      <div class="bg-slate-900/70 border border-slate-800 rounded-2xl p-5 flex items-center gap-4">
         <div class="p-3 bg-cyan-500/10 text-cyan-400 rounded-xl">
           <i data-lucide="briefcase" class="w-5 h-5"></i>
         </div>
@@ -213,7 +95,7 @@
         </div>
       </div>
 
-      <div class="stat-card bg-slate-900/70 border border-slate-800 rounded-2xl p-5 flex items-center gap-4">
+      <div class="bg-slate-900/70 border border-slate-800 rounded-2xl p-5 flex items-center gap-4">
         <div class="p-3 bg-emerald-500/10 text-emerald-400 rounded-xl">
           <i data-lucide="file-text" class="w-5 h-5"></i>
         </div>
@@ -222,103 +104,69 @@
           <p id="total-curriculos" class="text-2xl font-bold text-white">—</p>
         </div>
       </div>
-
     </div>
 
 
-    <!-- TÍTULO E FILTROS -->
-    <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-5 mb-6">
-
+    <!-- CONTROLES E FILTROS DE BUSCA -->
+    <div >
       <div>
-        <div class="flex items-center gap-2 mb-2">
-          <span class="w-8 h-px bg-indigo-500"></span>
-          <span class="text-xs font-semibold uppercase tracking-widest text-indigo-400">
-            Nossa turma
-          </span>
-        </div>
-
-        <h3 class="text-2xl sm:text-3xl font-bold text-white">
-          Conheça nossos talentos
-        </h3>
-
-        <p class="text-sm text-slate-500 mt-1">
-          Encontre profissionais por nome, cargo ou habilidade.
+        <p id="resultado-info" class="text-sm text-slate-400">
+          Carregando talentos...
         </p>
       </div>
 
-      <div class="flex flex-col sm:flex-row gap-3 w-full lg:w-auto">
-
+      <div class="flex flex-wrap items-center gap-3 w-full sm:w-auto">
         <select
           id="cargo-filter"
-          class="bg-slate-800/80 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-indigo-500 transition w-full sm:w-auto"
+          class="bg-slate-800/80 border border-slate-700 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-indigo-500 transition w-full sm:w-auto"
         >
           <option value="">Todos os cargos</option>
         </select>
 
         <select
           id="ordenacao"
-          class="bg-slate-800/80 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-indigo-500 transition w-full sm:w-auto"
+          class="bg-slate-800/80 border border-slate-700 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-indigo-500 transition w-full sm:w-auto"
         >
           <option value="nome_asc">Nome (A-Z)</option>
           <option value="nome_desc">Nome (Z-A)</option>
           <option value="data_desc">Mais recentes</option>
         </select>
-
       </div>
     </div>
 
 
-    <!-- RESULTADO -->
-    <div class="flex items-center justify-between gap-3 mb-5">
-      <p id="resultado-info" class="text-sm text-slate-500">
-        Carregando talentos...
-      </p>
-
-      <div class="flex items-center gap-2 text-xs text-slate-500">
-        <i data-lucide="layout-grid" class="w-4 h-4"></i>
-        <span>Visualização em cards</span>
-      </div>
-    </div>
-
-
-    <!-- SKELETON -->
+    <!-- SKELETON (Aguardando Carregamento) -->
     <div id="loading-skeleton" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-
       <script>
         for (let i = 0; i < 8; i++) {
           document.write(`
-            <div class="bg-slate-800/70 border border-slate-700/60 rounded-2xl p-6 flex flex-col items-center animate-pulse">
-              <div class="w-24 h-24 bg-slate-700 rounded-full mb-4"></div>
-              <div class="h-5 bg-slate-700 rounded w-3/4 mb-2"></div>
-              <div class="h-4 bg-slate-700/60 rounded w-1/2 mb-6"></div>
-              <div class="h-10 bg-slate-700 rounded-xl w-full mt-auto"></div>
+            <div class="bg-slate-900/75 border border-slate-800 rounded-2xl p-6 flex flex-col items-center animate-pulse">
+              <div class="w-24 h-24 bg-slate-800 rounded-full mb-4"></div>
+              <div class="h-5 bg-slate-800 rounded w-3/4 mb-2"></div>
+              <div class="h-4 bg-slate-800/60 rounded w-1/2 mb-6"></div>
+              <div class="h-10 bg-slate-800 rounded-xl w-full mt-auto"></div>
             </div>
           `);
         }
       </script>
-
     </div>
 
 
     <!-- ESTADO VAZIO -->
     <div id="empty-state" class="hidden text-center py-20 px-4">
-
       <div class="inline-flex p-5 bg-slate-800/80 border border-slate-700 rounded-2xl text-slate-500 mb-5">
         <i data-lucide="users-round" class="w-10 h-10"></i>
       </div>
-
       <h3 id="empty-title" class="text-xl font-semibold text-white mb-2">
         Nenhum aluno encontrado
       </h3>
-
       <p id="empty-message" class="text-slate-500 text-sm max-w-md mx-auto">
         Ainda não há cadastros ou nenhum registro corresponde à sua busca.
       </p>
-
     </div>
 
 
-    <!-- CARDS -->
+    <!-- CARDS DOS ALUNOS (LAYOUT PRESERVADO) -->
     <div id="cards-container" class="hidden grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
     </div>
 
@@ -326,7 +174,7 @@
 
 
   <!-- FOOTER -->
-  <footer class="border-t border-slate-800/80 py-8 text-center">
+  <footer class="border-t border-slate-800/80 py-8 text-center mt-auto">
     <div class="max-w-7xl mx-auto px-4">
       <div class="flex items-center justify-center gap-2 mb-2">
         <i data-lucide="graduation-cap" class="w-4 h-4 text-indigo-400"></i>
@@ -347,8 +195,7 @@
     // ============================================================
 
     const SUPABASE_URL = 'https://eempgprspimlhzlofvjx.supabase.co';
-
-    const SUPABASE_ANON_KEY = 'sb_publishable_H8eepB7xyJndr_TdsvuiVw_pJbsP';
+    const SUPABASE_ANON_KEY = 'sb_publishable_H8eepB7xyJndr_TdsvuiVw_pJbsPC5k';
 
     const supabaseClient = window.supabase.createClient(
       SUPABASE_URL,
@@ -387,9 +234,7 @@
     // ============================================================
 
     async function carregarMembros() {
-
       try {
-
         const { data, error } = await supabaseClient
           .from('aluno')
           .select('*')
@@ -404,7 +249,6 @@
         aplicarFiltros();
 
       } catch (err) {
-
         console.error('ERRO COMPLETO DO SUPABASE:', err);
 
         loadingSkeleton.classList.add('hidden');
@@ -412,12 +256,8 @@
         emptyState.classList.remove('hidden');
 
         emptyTitle.textContent = 'Erro ao carregar dados';
-
-        emptyMessage.textContent =
-          err.message || 'Não foi possível consultar o Supabase.';
-
+        emptyMessage.textContent = err.message || 'Não foi possível consultar o Supabase.';
       }
-
     }
 
 
@@ -426,7 +266,6 @@
     // ============================================================
 
     function atualizarEstatisticas(membros) {
-
       const cargos = new Set(
         membros
           .map(m => m.cargo)
@@ -441,7 +280,6 @@
       totalAlunos.textContent = membros.length;
       totalCargos.textContent = cargos.size;
       totalCurriculos.textContent = curriculos;
-
     }
 
 
@@ -450,7 +288,6 @@
     // ============================================================
 
     function preencherFiltroCargo(membros) {
-
       const cargos = [
         ...new Set(
           membros
@@ -465,16 +302,11 @@
       cargoFilter.innerHTML = '<option value="">Todos os cargos</option>';
 
       cargos.forEach(cargo => {
-
         const option = document.createElement('option');
-
         option.value = cargo;
         option.textContent = cargo;
-
         cargoFilter.appendChild(option);
-
       });
-
     }
 
 
@@ -483,16 +315,12 @@
     // ============================================================
 
     function aplicarFiltros() {
-
       const termo = searchInput.value.toLowerCase().trim();
       const cargoSelecionado = cargoFilter.value;
 
-      const palavras = termo
-        ? termo.split(/\s+/).filter(Boolean)
-        : [];
+      const palavras = termo ? termo.split(/\s+/).filter(Boolean) : [];
 
       const filtrados = todosMembros.filter(membro => {
-
         if (
           cargoSelecionado &&
           String(membro.cargo || '').trim() !== cargoSelecionado
@@ -501,7 +329,6 @@
         }
 
         if (palavras.length > 0) {
-
           const textoParaBusca = [
             membro.nome,
             membro.cargo,
@@ -515,106 +342,75 @@
           return palavras.every(palavra =>
             textoParaBusca.includes(palavra)
           );
-
         }
 
         return true;
-
       });
 
       const ordenacao = ordenacaoSelect.value;
 
       switch (ordenacao) {
-
         case 'nome_asc':
           filtrados.sort((a, b) =>
-            String(a.nome || '').localeCompare(
-              String(b.nome || ''),
-              'pt-BR'
-            )
+            String(a.nome || '').localeCompare(String(b.nome || ''), 'pt-BR')
           );
           break;
 
         case 'nome_desc':
           filtrados.sort((a, b) =>
-            String(b.nome || '').localeCompare(
-              String(a.nome || ''),
-              'pt-BR'
-            )
+            String(b.nome || '').localeCompare(String(a.nome || ''), 'pt-BR')
           );
           break;
 
         case 'data_desc':
           filtrados.sort((a, b) => {
-
-            const aDate = a.created_at
-              ? new Date(a.created_at).getTime()
-              : Number(a.id || 0);
-
-            const bDate = b.created_at
-              ? new Date(b.created_at).getTime()
-              : Number(b.id || 0);
-
+            const aDate = a.created_at ? new Date(a.created_at).getTime() : Number(a.id || 0);
+            const bDate = b.created_at ? new Date(b.created_at).getTime() : Number(b.id || 0);
             return bDate - aDate;
-
           });
-
           break;
-
       }
 
       membrosFiltrados = filtrados;
-
       renderizarCards(filtrados);
-
     }
 
 
     // ============================================================
-    // 7. RENDERIZAR CARDS
+    // 7. RENDERIZAR CARDS (PRESERVADO)
     // ============================================================
 
     function renderizarCards(membros) {
-
       loadingSkeleton.classList.add('hidden');
 
       resultadoInfo.textContent =
         `${membros.length} ${membros.length === 1 ? 'talento encontrado' : 'talentos encontrados'}`;
 
       if (!membros || membros.length === 0) {
-
         cardsContainer.classList.add('hidden');
         emptyState.classList.remove('hidden');
 
         emptyTitle.textContent = 'Nenhum talento encontrado';
-
         emptyMessage.textContent =
           todosMembros.length === 0
             ? 'Ainda não há cadastros disponíveis.'
             : 'Tente ajustar os filtros ou a busca.';
 
         return;
-
       }
 
       emptyState.classList.add('hidden');
       cardsContainer.classList.remove('hidden');
 
       cardsContainer.innerHTML = membros.map((membro, index) => {
-
         const nome = String(membro.nome || 'Sem nome');
         const cargo = String(membro.cargo || 'Cargo não definido');
 
-        const foto = membro.foto_url &&
-          String(membro.foto_url).trim() !== ''
-            ? membro.foto_url
-            : 'https://ui-avatars.com/api/?name=' +
-              encodeURIComponent(nome) +
-              '&background=4f46e5&color=fff&size=128';
+        const foto = membro.foto_url && String(membro.foto_url).trim() !== ''
+          ? membro.foto_url
+          : 'https://ui-avatars.com/api/?name=' + encodeURIComponent(nome) + '&background=4f46e5&color=fff&size=128';
 
-        const temCurriculo =
-          membro.curriculo_url &&
-          String(membro.curriculo_url).trim() !== '';
+        const temCurriculo = membro.curriculo_url && String(membro.curriculo_url).trim() !== '';
 
         const habilidades = obterHabilidades(membro.habilidades);
 
@@ -642,23 +438,16 @@
           : '';
 
         const btnClass = temCurriculo
-          ? 'bg-slate-700/80 hover:bg-indigo-600 border-slate-600/50 hover:border-transparent'
-          : 'bg-slate-700/40 border-slate-600/30 btn-disabled';
+          ? 'bg-slate-800 hover:bg-indigo-600 border-slate-700 hover:border-transparent'
+          : 'bg-slate-800/40 border-slate-700/30 btn-disabled';
 
-        const btnText = temCurriculo
-          ? 'Ver Currículo'
-          : 'Currículo indisponível';
+        const btnText = temCurriculo ? 'Ver Currículo' : 'Currículo indisponível';
 
         return `
-          <div
-            class="card fade-up bg-slate-900/75 border border-slate-800 rounded-2xl p-6 flex flex-col items-center text-center"
-            style="animation-delay: ${Math.min(index * 35, 350)}ms"
-          >
+          <div class="bg-slate-900/75 border border-slate-800 rounded-2xl p-6 flex flex-col items-center text-center transition duration-200 hover:border-indigo-500/50">
 
             <!-- FOTO -->
             <div class="relative mb-4">
-              <div class="absolute inset-0 rounded-full bg-indigo-500/20 blur-xl"></div>
-
               <div class="relative w-24 h-24 rounded-full p-1 bg-gradient-to-tr from-indigo-500 to-cyan-500">
                 <img
                   src="${escapeHtml(foto)}"
@@ -699,11 +488,9 @@
 
           </div>
         `;
-
       }).join('');
 
       lucide.createIcons();
-
     }
 
 
@@ -712,7 +499,6 @@
     // ============================================================
 
     function obterHabilidades(habilidades) {
-
       if (!habilidades) return [];
 
       if (Array.isArray(habilidades)) {
@@ -729,7 +515,6 @@
       }
 
       return [];
-
     }
 
 
@@ -738,7 +523,6 @@
     // ============================================================
 
     function escapeHtml(str) {
-
       if (str === null || str === undefined) return '';
 
       return String(str)
@@ -747,7 +531,6 @@
         .replace(/>/g, '&gt;')
         .replace(/"/g, '&quot;')
         .replace(/'/g, '&#039;');
-
     }
 
 
@@ -758,13 +541,11 @@
     let timeoutId = null;
 
     function debounceAplicarFiltros() {
-
       clearTimeout(timeoutId);
 
       timeoutId = setTimeout(() => {
         aplicarFiltros();
       }, 250);
-
     }
 
     searchInput.addEventListener('input', debounceAplicarFiltros);
