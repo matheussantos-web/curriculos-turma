@@ -314,9 +314,9 @@
                     class="tech-input w-full pl-10 pr-4 py-3 bg-slate-900/90 border border-slate-700/80 rounded-xl text-sm text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 transition">
 
                 <div class="absolute right-3 top-1/2 -translate-y-1/2 hidden sm:block">
-                    <span class="text-[9px] font-mono text-slate-600 border border-slate-700 px-1.5 py-0.5 rounded">
+                    <!-- <span class="text-[9px] font-mono text-slate-600 border border-slate-700 px-1.5 py-0.5 rounded">
                         SEARCH
-                    </span>
+                    </span> -->
                 </div>
 
             </div>
@@ -376,8 +376,9 @@
                 <!-- SUBTÍTULO -->
                 <p class="mt-7 text-sm sm:text-base md:text-lg leading-relaxed text-slate-400 max-w-2xl mx-auto">
                     Explore os talentos, habilidades e especializações da nossa turma.
+                    <br>
                     <span class="text-blue-400">
-                        Conectando pessoas, tecnologia e inovação.
+                        Conheça quem está pronto para construir o futuro da tecnologia.
                     </span>
                 </p>
 
@@ -411,9 +412,9 @@
         <!-- ESTATÍSTICAS -->
         <!-- ======================================================= -->
 
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-10">
+        <!-- <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-10">
 
-            <!-- TALENTOS -->
+            // TALENTOS 
             <div class="stat-card tech-border border border-slate-800/80 rounded-2xl p-5 flex items-center gap-4">
 
                 <div class="p-3.5 bg-blue-500/10 text-blue-400 rounded-xl border border-blue-500/10">
@@ -439,7 +440,7 @@
             </div>
 
 
-            <!-- ÁREAS -->
+            // ÁREAS 
             <div class="stat-card tech-border border border-slate-800/80 rounded-2xl p-5 flex items-center gap-4">
 
                 <div class="p-3.5 bg-cyan-500/10 text-cyan-400 rounded-xl border border-cyan-500/10">
@@ -465,7 +466,7 @@
             </div>
 
 
-            <!-- CURRÍCULOS -->
+            // CURRÍCULOS 
             <div class="stat-card tech-border border border-slate-800/80 rounded-2xl p-5 flex items-center gap-4">
 
                 <div class="p-3.5 bg-blue-500/10 text-blue-400 rounded-xl border border-blue-500/10">
@@ -490,7 +491,7 @@
 
             </div>
 
-        </div>
+        </div> -->
 
 
         <!-- ======================================================= -->
@@ -511,7 +512,7 @@
                         <span class="w-1.5 h-1.5 rounded-full bg-blue-400"></span>
 
                         <span class="text-[9px] font-mono uppercase tracking-[0.25em] text-blue-400">
-                            Database / Profiles
+                            Profiles
                         </span>
 
                     </div>
@@ -525,10 +526,10 @@
 
                 <div class="flex flex-col sm:flex-row flex-wrap items-center gap-3 w-full lg:w-auto">
 
-                    <select id="cargo-filter"
+                    <!-- <select id="cargo-filter"
                         class="bg-slate-900/90 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-blue-500 transition w-full sm:w-auto">
                         <option value="">Todos os cargos</option>
-                    </select>
+                    </select> -->
 
                     <select id="ordenacao"
                         class="bg-slate-900/90 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-blue-500 transition w-full sm:w-auto">
@@ -651,398 +652,349 @@
 
     <script>
 
-        // ============================================================
-        // 1. CONFIGURAÇÃO DO SUPABASE
-        // ============================================================
+    // ============================================================
+    // 1. CONFIGURAÇÃO DO SUPABASE
+    // ============================================================
 
-        const SUPABASE_URL = 'https://eempgprspimlhzlofvjx.supabase.co';
-        const SUPABASE_ANON_KEY = 'sb_publishable_H8eepB7xyJndr_TdsvuiVw_pJbsPC5k';
+    const SUPABASE_URL = 'https://eempgprspimlhzlofvjx.supabase.co';
+    const SUPABASE_ANON_KEY = 'sb_publishable_H8eepB7xyJndr_TdsvuiVw_pJbsPC5k';
 
-        const supabaseClient = window.supabase.createClient(
-            SUPABASE_URL,
-            SUPABASE_ANON_KEY,
-            {
-                auth: { persistSession: false }
-            }
+    const supabaseClient = window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_ANON_KEY,
+        {
+            auth: { persistSession: false }
+        }
+    );
+
+
+    // ============================================================
+    // 2. ELEMENTOS E ESTADO
+    // ============================================================
+
+    let todosMembros = [];
+    let membrosFiltrados = [];
+
+    const loadingSkeleton = document.getElementById('loading-skeleton');
+    const emptyState = document.getElementById('empty-state');
+    const emptyTitle = document.getElementById('empty-title');
+    const emptyMessage = document.getElementById('empty-message');
+    const cardsContainer = document.getElementById('cards-container');
+
+    const searchInput = document.getElementById('search-input');
+    const ordenacaoSelect = document.getElementById('ordenacao');
+
+    const totalAlunos = document.getElementById('total-alunos');
+    const totalCargos = document.getElementById('total-cargos');
+    const totalCurriculos = document.getElementById('total-curriculos');
+    const resultadoInfo = document.getElementById('resultado-info');
+
+
+    // ============================================================
+    // 3. BUSCAR DADOS DO SUPABASE
+    // ============================================================
+
+    async function carregarMembros() {
+        try {
+            const { data, error } = await supabaseClient
+                .from('aluno')
+                .select('*')
+                .order('id', { ascending: false });
+
+            if (error) throw error;
+
+            todosMembros = data || [];
+
+            atualizarEstatisticas(todosMembros);
+            aplicarFiltros();
+
+        } catch (err) {
+            console.error('ERRO COMPLETO DO SUPABASE:', err);
+
+            loadingSkeleton.classList.add('hidden');
+            cardsContainer.classList.add('hidden');
+            emptyState.classList.remove('hidden');
+
+            emptyTitle.textContent = 'Erro ao carregar dados';
+            emptyMessage.textContent = err.message || 'Não foi possível consultar o Supabase.';
+        }
+    }
+
+
+    // ============================================================
+    // 4. ESTATÍSTICAS
+    // ============================================================
+
+    function atualizarEstatisticas(membros) {
+        const cargos = new Set(
+            membros
+                .map(m => m.cargo)
+                .filter(Boolean)
+                .map(c => String(c).trim().toLowerCase())
         );
 
-
-        // ============================================================
-        // 2. ELEMENTOS E ESTADO
-        // ============================================================
-
-        let todosMembros = [];
-        let membrosFiltrados = [];
-
-        const loadingSkeleton = document.getElementById('loading-skeleton');
-        const emptyState = document.getElementById('empty-state');
-        const emptyTitle = document.getElementById('empty-title');
-        const emptyMessage = document.getElementById('empty-message');
-        const cardsContainer = document.getElementById('cards-container');
-
-        const searchInput = document.getElementById('search-input');
-        const cargoFilter = document.getElementById('cargo-filter');
-        const ordenacaoSelect = document.getElementById('ordenacao');
-
-        const totalAlunos = document.getElementById('total-alunos');
-        const totalCargos = document.getElementById('total-cargos');
-        const totalCurriculos = document.getElementById('total-curriculos');
-        const resultadoInfo = document.getElementById('resultado-info');
+        const curriculos = membros.filter(
+            m => m.curriculo_url && String(m.curriculo_url).trim() !== ''
+        ).length;
+    }
 
 
-        // ============================================================
-        // 3. BUSCAR DADOS DO SUPABASE
-        // ============================================================
+    // ============================================================
+    // 5. FILTRAGEM INTELIGENTE (Sem filtro de cargos)
+    // ============================================================
 
-        async function carregarMembros() {
-            try {
-                const { data, error } = await supabaseClient
-                    .from('aluno')
-                    .select('*')
-                    .order('id', { ascending: false });
+    function aplicarFiltros() {
+        const termo = searchInput.value.toLowerCase().trim();
 
-                if (error) throw error;
+        const palavras = termo ? termo.split(/\s+/).filter(Boolean) : [];
 
-                todosMembros = data || [];
+        const filtrados = todosMembros.filter(membro => {
+            // BUSCA SOMENTE PELO NOME
+            if (palavras.length > 0) {
+                const nomeParaBusca = String(membro.nome || '').toLowerCase();
 
-                atualizarEstatisticas(todosMembros);
-                preencherFiltroCargo(todosMembros);
-                aplicarFiltros();
-
-            } catch (err) {
-                console.error('ERRO COMPLETO DO SUPABASE:', err);
-
-                loadingSkeleton.classList.add('hidden');
-                cardsContainer.classList.add('hidden');
-                emptyState.classList.remove('hidden');
-
-                emptyTitle.textContent = 'Erro ao carregar dados';
-                emptyMessage.textContent = err.message || 'Não foi possível consultar o Supabase.';
+                return palavras.every(palavra =>
+                    nomeParaBusca.includes(palavra)
+                );
             }
+            return true;
+        });
+
+        const ordenacao = ordenacaoSelect.value;
+
+        switch (ordenacao) {
+            case 'nome_asc':
+                filtrados.sort((a, b) =>
+                    String(a.nome || '').localeCompare(String(b.nome || ''), 'pt-BR')
+                );
+                break;
+
+            case 'nome_desc':
+                filtrados.sort((a, b) =>
+                    String(b.nome || '').localeCompare(String(a.nome || ''), 'pt-BR')
+                );
+                break;
+
+            case 'data_desc':
+                filtrados.sort((a, b) => {
+                    const aDate = a.created_at ? new Date(a.created_at).getTime() : Number(a.id || 0);
+                    const bDate = b.created_at ? new Date(b.created_at).getTime() : Number(b.id || 0);
+                    return bDate - aDate;
+                });
+                break;
         }
 
+        membrosFiltrados = filtrados;
+        renderizarCards(filtrados);
+    }
 
-        // ============================================================
-        // 4. ESTATÍSTICAS
-        // ============================================================
 
-        function atualizarEstatisticas(membros) {
-            const cargos = new Set(
-                membros
-                    .map(m => m.cargo)
-                    .filter(Boolean)
-                    .map(c => String(c).trim().toLowerCase())
-            );
+    // ============================================================
+    // 6. RENDERIZAR CARDS
+    // ============================================================
 
-            const curriculos = membros.filter(
-                m => m.curriculo_url && String(m.curriculo_url).trim() !== ''
-            ).length;
+    function renderizarCards(membros) {
+        loadingSkeleton.classList.add('hidden');
 
-            totalAlunos.textContent = membros.length;
-            totalCargos.textContent = cargos.size;
-            totalCurriculos.textContent = curriculos;
+        resultadoInfo.textContent =
+            `${membros.length} ${membros.length === 1 ? 'currículo encontrado' : 'currículos encontrados'}`;
+
+        if (!membros || membros.length === 0) {
+            cardsContainer.classList.add('hidden');
+            emptyState.classList.remove('hidden');
+
+            emptyTitle.textContent = 'Nenhum currículo encontrado';
+            emptyMessage.textContent =
+                todosMembros.length === 0
+                    ? 'Ainda não há currículo disponíveis.'
+                    : 'Tente ajustar os filtros ou a busca.';
+
+            return;
         }
 
+        emptyState.classList.add('hidden');
+        cardsContainer.classList.remove('hidden');
 
-        // ============================================================
-        // 5. FILTRO DE CARGOS
-        // ============================================================
+        cardsContainer.innerHTML = membros.map((membro, index) => {
+            const nome = String(membro.nome || 'Sem nome');
+            const cargo = String(membro.cargo || 'Cargo não definido');
 
-        function preencherFiltroCargo(membros) {
-            const cargos = [
-                ...new Set(
-                    membros
-                        .map(m => m.cargo)
-                        .filter(Boolean)
-                        .map(c => String(c).trim())
-                )
-            ];
+            const foto = membro.foto_url && String(membro.foto_url).trim() !== ''
+                ? membro.foto_url
+                : 'https://ui-avatars.com/api/?name=' + encodeURIComponent(nome) + '&background=4f46e5&color=fff&size=128';
 
-            cargos.sort((a, b) => a.localeCompare(b, 'pt-BR'));
+            const temCurriculo = membro.curriculo_url && String(membro.curriculo_url).trim() !== '';
 
-            cargoFilter.innerHTML = '<option value="">Todos os cargos</option>';
+            const habilidades = obterHabilidades(membro.habilidades);
 
-            cargos.forEach(cargo => {
-                const option = document.createElement('option');
-                option.value = cargo;
-                option.textContent = cargo;
-                cargoFilter.appendChild(option);
-            });
-        }
+            const habilidadesHtml = habilidades.length
+                ? `
+        <div class="flex flex-wrap justify-center gap-1.5 mt-3">
+          ${habilidades.slice(0, 4).map(hab =>
+                    `<span class="skill-badge">${escapeHtml(hab)}</span>`
+                ).join('')}
 
-
-        // ============================================================
-        // 6. FILTRAGEM INTELIGENTE
-        // ============================================================
-
-        function aplicarFiltros() {
-            const termo = searchInput.value.toLowerCase().trim();
-            const cargoSelecionado = cargoFilter.value;
-
-            const palavras = termo ? termo.split(/\s+/).filter(Boolean) : [];
-
-            const filtrados = todosMembros.filter(membro => {
-                if (
-                    cargoSelecionado &&
-                    String(membro.cargo || '').trim() !== cargoSelecionado
-                ) {
-                    return false;
+          ${habilidades.length > 4
+                    ? `<span class="skill-badge">+${habilidades.length - 4}</span>`
+                    : ''
                 }
-                // BUSCA SOMENTE PELO NOME
-                if (palavras.length > 0) {
-                    const nomeParaBusca = String(membro.nome || '').toLowerCase();
+        </div>
+      `
+                : '';
 
-                    return palavras.every(palavra =>
-                        nomeParaBusca.includes(palavra)
-                    );
-                }
-                return true;
-            });
+            const descricaoHtml = membro.descricao
+                ? `
+        <p class="text-xs text-slate-500 mt-3 line-clamp-2 leading-relaxed">
+          ${escapeHtml(membro.descricao)}
+        </p>
+      `
+                : '';
 
-            const ordenacao = ordenacaoSelect.value;
+            const btnClass = temCurriculo
+                ? 'bg-slate-800 hover:bg-blue-600 border-slate-700 hover:border-transparent'
+                : 'bg-slate-800/40 border-slate-700/30 btn-disabled';
 
-            switch (ordenacao) {
-                case 'nome_asc':
-                    filtrados.sort((a, b) =>
-                        String(a.nome || '').localeCompare(String(b.nome || ''), 'pt-BR')
-                    );
-                    break;
+            const btnText = temCurriculo ? 'Ver Currículo' : 'Currículo indisponível';
 
-                case 'nome_desc':
-                    filtrados.sort((a, b) =>
-                        String(b.nome || '').localeCompare(String(a.nome || ''), 'pt-BR')
-                    );
-                    break;
+            return `
+      <div class="programmer-card bg-slate-950/80 border border-slate-800 rounded-2xl p-6 flex flex-col items-center text-center relative overflow-hidden">
 
-                case 'data_desc':
-                    filtrados.sort((a, b) => {
-                        const aDate = a.created_at ? new Date(a.created_at).getTime() : Number(a.id || 0);
-                        const bDate = b.created_at ? new Date(b.created_at).getTime() : Number(b.id || 0);
-                        return bDate - aDate;
-                    });
-                    break;
-            }
-
-            membrosFiltrados = filtrados;
-            renderizarCards(filtrados);
-        }
+        <div class="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-blue-500/30 to-transparent"></div>
 
 
-        // ============================================================
-        // 7. RENDERIZAR CARDS
-        // ============================================================
+        <!-- FOTO -->
+        <div class="relative mb-4 mt-3">
 
-        function renderizarCards(membros) {
-            loadingSkeleton.classList.add('hidden');
+          <div class="absolute inset-[-5px] rounded-full border border-blue-500/10"></div>
 
-            resultadoInfo.textContent =
-                `${membros.length} ${membros.length === 1 ? 'talento encontrado' : 'talentos encontrados'}`;
+          <div class="absolute inset-[-9px] rounded-full border border-dashed border-blue-500/10"></div>
 
-            if (!membros || membros.length === 0) {
-                cardsContainer.classList.add('hidden');
-                emptyState.classList.remove('hidden');
+          <div class="avatar-ring relative w-24 h-24 rounded-full p-1 bg-gradient-to-tr from-blue-700 via-blue-500 to-cyan-400">
 
-                emptyTitle.textContent = 'Nenhum talento encontrado';
-                emptyMessage.textContent =
-                    todosMembros.length === 0
-                        ? 'Ainda não há cadastros disponíveis.'
-                        : 'Tente ajustar os filtros ou a busca.';
-
-                return;
-            }
-
-            emptyState.classList.add('hidden');
-            cardsContainer.classList.remove('hidden');
-
-            cardsContainer.innerHTML = membros.map((membro, index) => {
-                const nome = String(membro.nome || 'Sem nome');
-                const cargo = String(membro.cargo || 'Cargo não definido');
-
-                const foto = membro.foto_url && String(membro.foto_url).trim() !== ''
-                    ? membro.foto_url
-                    : 'https://ui-avatars.com/api/?name=' + encodeURIComponent(nome) + '&background=4f46e5&color=fff&size=128';
-
-                const temCurriculo = membro.curriculo_url && String(membro.curriculo_url).trim() !== '';
-
-                const habilidades = obterHabilidades(membro.habilidades);
-
-                const habilidadesHtml = habilidades.length
-                    ? `
-            <div class="flex flex-wrap justify-center gap-1.5 mt-3">
-              ${habilidades.slice(0, 4).map(hab =>
-                        `<span class="skill-badge">${escapeHtml(hab)}</span>`
-                    ).join('')}
-
-              ${habilidades.length > 4
-                        ? `<span class="skill-badge">+${habilidades.length - 4}</span>`
-                        : ''
-                    }
-            </div>
-          `
-                    : '';
-
-                const descricaoHtml = membro.descricao
-                    ? `
-            <p class="text-xs text-slate-500 mt-3 line-clamp-2 leading-relaxed">
-              ${escapeHtml(membro.descricao)}
-            </p>
-          `
-                    : '';
-
-                const btnClass = temCurriculo
-                    ? 'bg-slate-800 hover:bg-blue-600 border-slate-700 hover:border-transparent'
-                    : 'bg-slate-800/40 border-slate-700/30 btn-disabled';
-
-                const btnText = temCurriculo ? 'Ver Currículo' : 'Currículo indisponível';
-
-                return `
-          <div class="programmer-card bg-slate-950/80 border border-slate-800 rounded-2xl p-6 flex flex-col items-center text-center relative overflow-hidden">
-
-            <div class="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-blue-500/30 to-transparent"></div>
-
-            <div class="absolute top-3 left-3 text-[7px] font-mono text-blue-500/30">
-              NODE_${String(index + 1).padStart(2, '0')}
-            </div>
-
-            <div class="absolute top-3 right-3 flex items-center gap-1.5">
-              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_7px_#34d399]"></span>
-              <span class="text-[7px] font-mono text-slate-600">ONLINE</span>
-            </div>
-
-            <!-- FOTO -->
-            <div class="relative mb-4 mt-3">
-
-              <div class="absolute inset-[-5px] rounded-full border border-blue-500/10"></div>
-
-              <div class="absolute inset-[-9px] rounded-full border border-dashed border-blue-500/10"></div>
-
-              <div class="avatar-ring relative w-24 h-24 rounded-full p-1 bg-gradient-to-tr from-blue-700 via-blue-500 to-cyan-400">
-
-                <img
-                  src="${escapeHtml(foto)}"
-                  alt="Foto de ${escapeHtml(nome)}"
-                  class="w-full h-full object-cover rounded-full bg-slate-950"
-                  onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(nome)}&background=1d4ed8&color=fff&size=128'"
-                >
-
-              </div>
-
-            </div>
-
-
-            <!-- NOME -->
-            <h2 class="text-lg font-bold text-white line-clamp-1">
-              ${escapeHtml(nome)}
-            </h2>
-
-
-            <!-- CARGO -->
-            <p class="text-[10px] font-semibold text-blue-300 bg-blue-500/10 px-3 py-1 rounded-full border border-blue-500/20 mt-2 uppercase tracking-wider">
-              ${escapeHtml(cargo)}
-            </p>
-
-
-            ${habilidadesHtml}
-            ${descricaoHtml}
-
-
-            <!-- CURRÍCULO -->
-            <a
-              href="${temCurriculo ? escapeHtml(membro.curriculo_url) : '#'}"
-              target="${temCurriculo ? '_blank' : ''}"
-              rel="${temCurriculo ? 'noopener noreferrer' : ''}"
-              class="w-full mt-5 py-2.5 px-4 text-white text-sm font-semibold rounded-xl flex items-center justify-center gap-2 transition duration-200 border ${btnClass}"
+            <img
+              src="${escapeHtml(foto)}"
+              alt="Foto de ${escapeHtml(nome)}"
+              class="w-full h-full object-cover rounded-full bg-slate-950"
+              onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(nome)}&background=1d4ed8&color=fff&size=128'"
             >
 
-              ${temCurriculo
-                        ? '<i data-lucide="file-text" class="w-4 h-4 text-blue-400"></i>'
-                        : '<i data-lucide="file-x" class="w-4 h-4 text-slate-500"></i>'
-                    }
-
-              <span>${btnText}</span>
-
-              ${temCurriculo
-                        ? '<i data-lucide="arrow-up-right" class="w-4 h-4 text-slate-400"></i>'
-                        : ''
-                    }
-
-            </a>
-
           </div>
-        `;
-            }).join('');
 
-            lucide.createIcons();
-        }
+        </div>
 
 
-        // ============================================================
-        // 8. HABILIDADES
-        // ============================================================
-
-        function obterHabilidades(habilidades) {
-            if (!habilidades) return [];
-
-            if (Array.isArray(habilidades)) {
-                return habilidades
-                    .map(h => String(h).trim())
-                    .filter(Boolean);
-            }
-
-            if (typeof habilidades === 'string') {
-                return habilidades
-                    .split(',')
-                    .map(h => h.trim())
-                    .filter(Boolean);
-            }
-
-            return [];
-        }
+        <!-- NOME -->
+        <h2 class="text-lg font-bold text-white line-clamp-1">
+          ${escapeHtml(nome)}
+        </h2>
 
 
-        // ============================================================
-        // 9. PROTEÇÃO CONTRA HTML MALICIOSO
-        // ============================================================
-
-        function escapeHtml(str) {
-            if (str === null || str === undefined) return '';
-
-            return String(str)
-                .replace(/&/g, '&amp;')
-                .replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;')
-                .replace(/"/g, '&quot;')
-                .replace(/'/g, '&#039;');
-        }
+        <!-- CARGO -->
+        <p class="text-[10px] font-semibold text-blue-300 bg-blue-500/10 px-3 py-1 rounded-full border border-blue-500/20 mt-2 uppercase tracking-wider">
+          ${escapeHtml(cargo)}
+        </p>
 
 
-        // ============================================================
-        // 10. EVENTOS
-        // ============================================================
-
-        let timeoutId = null;
-
-        function debounceAplicarFiltros() {
-            clearTimeout(timeoutId);
-
-            timeoutId = setTimeout(() => {
-                aplicarFiltros();
-            }, 250);
-        }
-
-        searchInput.addEventListener('input', debounceAplicarFiltros);
-        cargoFilter.addEventListener('change', aplicarFiltros);
-        ordenacaoSelect.addEventListener('change', aplicarFiltros);
+        ${habilidadesHtml}
+        ${descricaoHtml}
 
 
-        // ============================================================
-        // 11. INICIAR
-        // ============================================================
+        <!-- CURRÍCULO -->
+        <a
+          href="${temCurriculo ? escapeHtml(membro.curriculo_url) : '#'}"
+          target="${temCurriculo ? '_blank' : ''}"
+          rel="${temCurriculo ? 'noopener noreferrer' : ''}"
+          class="w-full mt-5 py-2.5 px-4 text-white text-sm font-semibold rounded-xl flex items-center justify-center gap-2 transition duration-200 border ${btnClass}"
+        >
+
+          ${temCurriculo
+                    ? '<i data-lucide="file-text" class="w-4 h-4 text-blue-400"></i>'
+                    : '<i data-lucide="file-x" class="w-4 h-4 text-slate-500"></i>'
+                }
+
+          <span>${btnText}</span>
+
+          ${temCurriculo
+                    ? '<i data-lucide="arrow-up-right" class="w-4 h-4 text-slate-400"></i>'
+                    : ''
+                }
+
+        </a>
+
+      </div>
+    `;
+        }).join('');
 
         lucide.createIcons();
-        carregarMembros();
+    }
 
-    </script>
+
+    // ============================================================
+    // 7. HABILIDADES
+    // ============================================================
+
+    function obterHabilidades(habilidades) {
+        if (!habilidades) return [];
+
+        if (Array.isArray(habilidades)) {
+            return habilidades
+                .map(h => String(h).trim())
+                .filter(Boolean);
+        }
+
+        if (typeof habilidades === 'string') {
+            return habilidades
+                .split(',')
+                .map(h => h.trim())
+                .filter(Boolean);
+        }
+
+        return [];
+    }
+
+
+    // ============================================================
+    // 8. PROTEÇÃO CONTRA HTML MALICIOSO
+    // ============================================================
+
+    function escapeHtml(str) {
+        if (str === null || str === undefined) return '';
+
+        return String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+    }
+
+
+    // ============================================================
+    // 9. EVENTOS
+    // ============================================================
+
+    let timeoutId = null;
+
+    function debounceAplicarFiltros() {
+        clearTimeout(timeoutId);
+
+        timeoutId = setTimeout(() => {
+            aplicarFiltros();
+        }, 250);
+    }
+
+    searchInput.addEventListener('input', debounceAplicarFiltros);
+    ordenacaoSelect.addEventListener('change', aplicarFiltros);
+
+
+    // ============================================================
+    // 10. INICIAR
+    // ============================================================
+
+    lucide.createIcons();
+    carregarMembros();
+
+</script>
 
 </body>
 
