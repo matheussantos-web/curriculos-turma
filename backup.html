@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portfólio da Turma — Talentos & Currículos</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    /* Estilos utilitários específicos dos Cards e Badges */
+    .skill-badge {
+      font-size: 0.7rem;
+      padding: 0.2rem 0.5rem;
+      border-radius: 9999px;
+      background-color: rgba(99, 102, 241, 0.15);
+      color: #a5b4fc;
+      border: 1px solid rgba(99, 102, 241, 0.25);
+    }
+    .btn-disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+
+<body >
+
+  <!-- NAVBAR / BARRA DE PESQUISA (Preservada) -->
+  <header >
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-2">
+        
+        <span class="font-bold text-lg text-white">Portfólio da Turma</span>
+      </div>
+
+      <div class="relative w-full md:w-80">
+        <i data-lucide="search" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
+        <input
+          type="text"
+          id="search-input"
+          placeholder="Buscar por nome, cargo ou habilidade..."
+          class="w-full pl-9 pr-4 py-2.5 bg-slate-800/80 border border-slate-700 rounded-xl text-sm text-white placeholder-slate-400 focus:outline-none focus:border-indigo-500 transition"
+        >
+      </div>
+    </div>
+  </header>
+
+
+  <!-- HERO (Estrutura pronta para estilizar) -->
+  <section >
+    <div class="max-w-7xl mx-auto px-4">
+      <div>
+        <div >
+          <span class="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-pulse"></span>
+          <span></span>
+        </div>
+
+        <h2 >
+           <span ></span>
+        </h2>
+
+        <p >
+          
+        </p>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- CONTEÚDO PRINCIPAL -->
+  <main id="alunos" >
+
+    <!-- ESTATÍSTICAS -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-10">
+      <div class="bg-slate-900/70 border border-slate-800 rounded-2xl p-5 flex items-center gap-4">
+        <div class="p-3 bg-indigo-500/10 text-indigo-400 rounded-xl">
+          <i data-lucide="users" class="w-5 h-5"></i>
+        </div>
+        <div>
+          <p class="text-xs text-slate-500 uppercase tracking-wider font-medium">Talentos</p>
+          <p id="total-alunos" class="text-2xl font-bold text-white">—</p>
+        </div>
+      </div>
+
+      <div class="bg-slate-900/70 border border-slate-800 rounded-2xl p-5 flex items-center gap-4">
+        <div class="p-3 bg-cyan-500/10 text-cyan-400 rounded-xl">
+          <i data-lucide="briefcase" class="w-5 h-5"></i>
+        </div>
+        <div>
+          <p class="text-xs text-slate-500 uppercase tracking-wider font-medium">Áreas de atuação</p>
+          <p id="total-cargos" class="text-2xl font-bold text-white">—</p>
+        </div>
+      </div>
+
+      <div class="bg-slate-900/70 border border-slate-800 rounded-2xl p-5 flex items-center gap-4">
+        <div class="p-3 bg-emerald-500/10 text-emerald-400 rounded-xl">
+          <i data-lucide="file-text" class="w-5 h-5"></i>
+        </div>
+        <div>
+          <p class="text-xs text-slate-500 uppercase tracking-wider font-medium">Currículos</p>
+          <p id="total-curriculos" class="text-2xl font-bold text-white">—</p>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- CONTROLES E FILTROS DE BUSCA -->
+    <div >
+      <div>
+        <p id="resultado-info" class="text-sm text-slate-400">
+          Carregando talentos...
+        </p>
+      </div>
+
+      <div class="flex flex-wrap items-center gap-3 w-full sm:w-auto">
+        <select
+          id="cargo-filter"
+          class="bg-slate-800/80 border border-slate-700 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-indigo-500 transition w-full sm:w-auto"
+        >
+          <option value="">Todos os cargos</option>
+        </select>
+
+        <select
+          id="ordenacao"
+          class="bg-slate-800/80 border border-slate-700 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-indigo-500 transition w-full sm:w-auto"
+        >
+          <option value="nome_asc">Nome (A-Z)</option>
+          <option value="nome_desc">Nome (Z-A)</option>
+          <option value="data_desc">Mais recentes</option>
+        </select>
+      </div>
+    </div>
+
+
+    <!-- SKELETON (Aguardando Carregamento) -->
+    <div id="loading-skeleton" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      <script>
+        for (let i = 0; i < 8; i++) {
+          document.write(`
+            <div class="bg-slate-900/75 border border-slate-800 rounded-2xl p-6 flex flex-col items-center animate-pulse">
+              <div class="w-24 h-24 bg-slate-800 rounded-full mb-4"></div>
+              <div class="h-5 bg-slate-800 rounded w-3/4 mb-2"></div>
+              <div class="h-4 bg-slate-800/60 rounded w-1/2 mb-6"></div>
+              <div class="h-10 bg-slate-800 rounded-xl w-full mt-auto"></div>
+            </div>
+          `);
+        }
+      </script>
+    </div>
+
+
+    <!-- ESTADO VAZIO -->
+    <div id="empty-state" class="hidden text-center py-20 px-4">
+      <div class="inline-flex p-5 bg-slate-800/80 border border-slate-700 rounded-2xl text-slate-500 mb-5">
+        <i data-lucide="users-round" class="w-10 h-10"></i>
+      </div>
+      <h3 id="empty-title" class="text-xl font-semibold text-white mb-2">
+        Nenhum aluno encontrado
+      </h3>
+      <p id="empty-message" class="text-slate-500 text-sm max-w-md mx-auto">
+        Ainda não há cadastros ou nenhum registro corresponde à sua busca.
+      </p>
+    </div>
+
+
+    <!-- CARDS DOS ALUNOS (LAYOUT PRESERVADO) -->
+    <div id="cards-container" class="hidden grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+    </div>
+
+  </main>
+
+
+  <!-- FOOTER -->
+  <footer class="border-t border-slate-800/80 py-8 text-center mt-auto">
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="flex items-center justify-center gap-2 mb-2">
+        <i data-lucide="graduation-cap" class="w-4 h-4 text-indigo-400"></i>
+        <span class="text-sm font-semibold text-slate-300">Portfólio da Turma</span>
+      </div>
+      <p class="text-xs text-slate-600">
+        Uma vitrine de talentos • Supabase + Vercel
+      </p>
+    </div>
+  </footer>
+
+
+  <!-- JAVASCRIPT -->
+  <script>
+
+    // ============================================================
+    // 1. CONFIGURAÇÃO DO SUPABASE
+    // ============================================================
+
+    const SUPABASE_URL = 'https://eempgprspimlhzlofvjx.supabase.co';
+    const SUPABASE_ANON_KEY = 'sb_publishable_H8eepB7xyJndr_TdsvuiVw_pJbsPC5k';
+
+    const supabaseClient = window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_ANON_KEY,
+      {
+        auth: { persistSession: false }
+      }
+    );
+
+
+    // ============================================================
+    // 2. ELEMENTOS E ESTADO
+    // ============================================================
+
+    let todosMembros = [];
+    let membrosFiltrados = [];
+
+    const loadingSkeleton = document.getElementById('loading-skeleton');
+    const emptyState = document.getElementById('empty-state');
+    const emptyTitle = document.getElementById('empty-title');
+    const emptyMessage = document.getElementById('empty-message');
+    const cardsContainer = document.getElementById('cards-container');
+
+    const searchInput = document.getElementById('search-input');
+    const cargoFilter = document.getElementById('cargo-filter');
+    const ordenacaoSelect = document.getElementById('ordenacao');
+
+    const totalAlunos = document.getElementById('total-alunos');
+    const totalCargos = document.getElementById('total-cargos');
+    const totalCurriculos = document.getElementById('total-curriculos');
+    const resultadoInfo = document.getElementById('resultado-info');
+
+
+    // ============================================================
+    // 3. BUSCAR DADOS DO SUPABASE
+    // ============================================================
+
+    async function carregarMembros() {
+      try {
+        const { data, error } = await supabaseClient
+          .from('aluno')
+          .select('*')
+          .order('id', { ascending: false });
+
+        if (error) throw error;
+
+        todosMembros = data || [];
+
+        atualizarEstatisticas(todosMembros);
+        preencherFiltroCargo(todosMembros);
+        aplicarFiltros();
+
+      } catch (err) {
+        console.error('ERRO COMPLETO DO SUPABASE:', err);
+
+        loadingSkeleton.classList.add('hidden');
+        cardsContainer.classList.add('hidden');
+        emptyState.classList.remove('hidden');
+
+        emptyTitle.textContent = 'Erro ao carregar dados';
+        emptyMessage.textContent = err.message || 'Não foi possível consultar o Supabase.';
+      }
+    }
+
+
+    // ============================================================
+    // 4. ESTATÍSTICAS
+    // ============================================================
+
+    function atualizarEstatisticas(membros) {
+      const cargos = new Set(
+        membros
+          .map(m => m.cargo)
+          .filter(Boolean)
+          .map(c => String(c).trim().toLowerCase())
+      );
+
+      const curriculos = membros.filter(
+        m => m.curriculo_url && String(m.curriculo_url).trim() !== ''
+      ).length;
+
+      totalAlunos.textContent = membros.length;
+      totalCargos.textContent = cargos.size;
+      totalCurriculos.textContent = curriculos;
+    }
+
+
+    // ============================================================
+    // 5. FILTRO DE CARGOS
+    // ============================================================
+
+    function preencherFiltroCargo(membros) {
+      const cargos = [
+        ...new Set(
+          membros
+            .map(m => m.cargo)
+            .filter(Boolean)
+            .map(c => String(c).trim())
+        )
+      ];
+
+      cargos.sort((a, b) => a.localeCompare(b, 'pt-BR'));
+
+      cargoFilter.innerHTML = '<option value="">Todos os cargos</option>';
+
+      cargos.forEach(cargo => {
+        const option = document.createElement('option');
+        option.value = cargo;
+        option.textContent = cargo;
+        cargoFilter.appendChild(option);
+      });
+    }
+
+
+    // ============================================================
+    // 6. FILTRAGEM INTELIGENTE
+    // ============================================================
+
+    function aplicarFiltros() {
+      const termo = searchInput.value.toLowerCase().trim();
+      const cargoSelecionado = cargoFilter.value;
+
+      const palavras = termo ? termo.split(/\s+/).filter(Boolean) : [];
+
+      const filtrados = todosMembros.filter(membro => {
+        if (
+          cargoSelecionado &&
+          String(membro.cargo || '').trim() !== cargoSelecionado
+        ) {
+          return false;
+        }
+
+        if (palavras.length > 0) {
+          const textoParaBusca = [
+            membro.nome,
+            membro.cargo,
+            membro.habilidades,
+            membro.descricao
+          ]
+            .filter(Boolean)
+            .join(' ')
+            .toLowerCase();
+
+          return palavras.every(palavra =>
+            textoParaBusca.includes(palavra)
+          );
+        }
+
+        return true;
+      });
+
+      const ordenacao = ordenacaoSelect.value;
+
+      switch (ordenacao) {
+        case 'nome_asc':
+          filtrados.sort((a, b) =>
+            String(a.nome || '').localeCompare(String(b.nome || ''), 'pt-BR')
+          );
+          break;
+
+        case 'nome_desc':
+          filtrados.sort((a, b) =>
+            String(b.nome || '').localeCompare(String(a.nome || ''), 'pt-BR')
+          );
+          break;
+
+        case 'data_desc':
+          filtrados.sort((a, b) => {
+            const aDate = a.created_at ? new Date(a.created_at).getTime() : Number(a.id || 0);
+            const bDate = b.created_at ? new Date(b.created_at).getTime() : Number(b.id || 0);
+            return bDate - aDate;
+          });
+          break;
+      }
+
+      membrosFiltrados = filtrados;
+      renderizarCards(filtrados);
+    }
+
+
+    // ============================================================
+    // 7. RENDERIZAR CARDS (PRESERVADO)
+    // ============================================================
+
+    function renderizarCards(membros) {
+      loadingSkeleton.classList.add('hidden');
+
+      resultadoInfo.textContent =
+        `${membros.length} ${membros.length === 1 ? 'talento encontrado' : 'talentos encontrados'}`;
+
+      if (!membros || membros.length === 0) {
+        cardsContainer.classList.add('hidden');
+        emptyState.classList.remove('hidden');
+
+        emptyTitle.textContent = 'Nenhum talento encontrado';
+        emptyMessage.textContent =
+          todosMembros.length === 0
+            ? 'Ainda não há cadastros disponíveis.'
+            : 'Tente ajustar os filtros ou a busca.';
+
+        return;
+      }
+
+      emptyState.classList.add('hidden');
+      cardsContainer.classList.remove('hidden');
+
+      cardsContainer.innerHTML = membros.map((membro, index) => {
+        const nome = String(membro.nome || 'Sem nome');
+        const cargo = String(membro.cargo || 'Cargo não definido');
+
+        const foto = membro.foto_url && String(membro.foto_url).trim() !== ''
+          ? membro.foto_url
+          : 'https://ui-avatars.com/api/?name=' + encodeURIComponent(nome) + '&background=4f46e5&color=fff&size=128';
+
+        const temCurriculo = membro.curriculo_url && String(membro.curriculo_url).trim() !== '';
+
+        const habilidades = obterHabilidades(membro.habilidades);
+
+        const habilidadesHtml = habilidades.length
+          ? `
+            <div class="flex flex-wrap justify-center gap-1.5 mt-3">
+              ${habilidades.slice(0, 4).map(hab =>
+                `<span class="skill-badge">${escapeHtml(hab)}</span>`
+              ).join('')}
+
+              ${habilidades.length > 4
+                ? `<span class="skill-badge">+${habilidades.length - 4}</span>`
+                : ''
+              }
+            </div>
+          `
+          : '';
+
+        const descricaoHtml = membro.descricao
+          ? `
+            <p class="text-xs text-slate-500 mt-3 line-clamp-2 leading-relaxed">
+              ${escapeHtml(membro.descricao)}
+            </p>
+          `
+          : '';
+
+        const btnClass = temCurriculo
+          ? 'bg-slate-800 hover:bg-indigo-600 border-slate-700 hover:border-transparent'
+          : 'bg-slate-800/40 border-slate-700/30 btn-disabled';
+
+        const btnText = temCurriculo ? 'Ver Currículo' : 'Currículo indisponível';
+
+        return `
+          <div class="bg-slate-900/75 border border-slate-800 rounded-2xl p-6 flex flex-col items-center text-center transition duration-200 hover:border-indigo-500/50">
+
+            <!-- FOTO -->
+            <div class="relative mb-4">
+              <div class="relative w-24 h-24 rounded-full p-1 bg-gradient-to-tr from-indigo-500 to-cyan-500">
+                <img
+                  src="${escapeHtml(foto)}"
+                  alt="Foto de ${escapeHtml(nome)}"
+                  class="w-full h-full object-cover rounded-full bg-slate-950"
+                  onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(nome)}&background=4f46e5&color=fff&size=128'"
+                >
+              </div>
+            </div>
+
+            <!-- NOME -->
+            <h2 class="text-lg font-bold text-white line-clamp-1">
+              ${escapeHtml(nome)}
+            </h2>
+
+            <!-- CARGO -->
+            <p class="text-xs font-medium text-indigo-300 bg-indigo-500/10 px-3 py-1 rounded-full border border-indigo-500/20 mt-2">
+              ${escapeHtml(cargo)}
+            </p>
+
+            ${habilidadesHtml}
+            ${descricaoHtml}
+
+            <!-- CURRÍCULO -->
+            <a
+              href="${temCurriculo ? escapeHtml(membro.curriculo_url) : '#'}"
+              target="${temCurriculo ? '_blank' : ''}"
+              rel="${temCurriculo ? 'noopener noreferrer' : ''}"
+              class="w-full mt-5 py-2.5 px-4 text-white text-sm font-semibold rounded-xl flex items-center justify-center gap-2 transition duration-200 border ${btnClass}"
+            >
+              <span>${btnText}</span>
+              ${
+                temCurriculo
+                  ? '<i data-lucide="arrow-up-right" class="w-4 h-4 text-slate-400"></i>'
+                  : '<i data-lucide="file-x" class="w-4 h-4 text-slate-500"></i>'
+              }
+            </a>
+
+          </div>
+        `;
+      }).join('');
+
+      lucide.createIcons();
+    }
+
+
+    // ============================================================
+    // 8. HABILIDADES
+    // ============================================================
+
+    function obterHabilidades(habilidades) {
+      if (!habilidades) return [];
+
+      if (Array.isArray(habilidades)) {
+        return habilidades
+          .map(h => String(h).trim())
+          .filter(Boolean);
+      }
+
+      if (typeof habilidades === 'string') {
+        return habilidades
+          .split(',')
+          .map(h => h.trim())
+          .filter(Boolean);
+      }
+
+      return [];
+    }
+
+
+    // ============================================================
+    // 9. PROTEÇÃO CONTRA HTML MALICIOSO
+    // ============================================================
+
+    function escapeHtml(str) {
+      if (str === null || str === undefined) return '';
+
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+
+    // ============================================================
+    // 10. EVENTOS
+    // ============================================================
+
+    let timeoutId = null;
+
+    function debounceAplicarFiltros() {
+      clearTimeout(timeoutId);
+
+      timeoutId = setTimeout(() => {
+        aplicarFiltros();
+      }, 250);
+    }
+
+    searchInput.addEventListener('input', debounceAplicarFiltros);
+    cargoFilter.addEventListener('change', aplicarFiltros);
+    ordenacaoSelect.addEventListener('change', aplicarFiltros);
+
+
+    // ============================================================
+    // 11. INICIAR
+    // ============================================================
+
+    lucide.createIcons();
+    carregarMembros();
+
+  </script>
+
+</body>
+</html>

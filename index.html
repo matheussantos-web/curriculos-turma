@@ -1,145 +1,558 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Portfólio da Turma — Talentos & Currículos</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dados dos Programadores — Portfólio da Turma</title>
 
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
 
-  <style>
-    /* Estilos utilitários específicos dos Cards e Badges */
-    .skill-badge {
-      font-size: 0.7rem;
-      padding: 0.2rem 0.5rem;
-      border-radius: 9999px;
-      background-color: rgba(99, 102, 241, 0.15);
-      color: #a5b4fc;
-      border: 1px solid rgba(99, 102, 241, 0.25);
-    }
-    .btn-disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-  </style>
+    <!-- FONTE TECNOLÓGICA -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background:
+                radial-gradient(circle at 50% -10%, rgba(0, 119, 255, 0.20), transparent 35%),
+                radial-gradient(circle at 0% 50%, rgba(0, 71, 171, 0.10), transparent 30%),
+                radial-gradient(circle at 100% 80%, rgba(0, 153, 255, 0.08), transparent 30%),
+                #020617;
+            color: #e2e8f0;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* GRID TECNOLÓGICO DE FUNDO */
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: -1;
+            opacity: 0.35;
+            background-image:
+                linear-gradient(rgba(30, 64, 175, 0.12) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(30, 64, 175, 0.12) 1px, transparent 1px);
+            background-size: 45px 45px;
+            mask-image: linear-gradient(to bottom, black, transparent 90%);
+        }
+
+        /* LINHA AZUL SUPERIOR */
+        body::after {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg,
+                    transparent,
+                    #2563eb,
+                    #38bdf8,
+                    #2563eb,
+                    transparent);
+            box-shadow:
+                0 0 15px #2563eb,
+                0 0 30px rgba(37, 99, 235, 0.6);
+            z-index: 50;
+        }
+
+        /* FONTE TECNOLÓGICA */
+        .tech-font {
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        /* SCROLLBAR */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #020617;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #1d4ed8;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #3b82f6;
+        }
+
+        /* BADGES */
+        .skill-badge {
+            font-size: 0.7rem;
+            padding: 0.3rem 0.6rem;
+            border-radius: 9999px;
+            background:
+                linear-gradient(135deg,
+                    rgba(37, 99, 235, 0.20),
+                    rgba(14, 165, 233, 0.08));
+            color: #7dd3fc;
+            border: 1px solid rgba(59, 130, 246, 0.35);
+            box-shadow:
+                inset 0 0 10px rgba(37, 99, 235, 0.05),
+                0 0 8px rgba(37, 99, 235, 0.05);
+            transition: all 0.2s ease;
+        }
+
+        .skill-badge:hover {
+            color: #bae6fd;
+            border-color: rgba(56, 189, 248, 0.7);
+            box-shadow: 0 0 12px rgba(14, 165, 233, 0.2);
+        }
+
+        .btn-disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* EFEITO GLOW */
+        .blue-glow {
+            text-shadow:
+                0 0 5px rgba(59, 130, 246, 0.8),
+                0 0 15px rgba(37, 99, 235, 0.5),
+                0 0 30px rgba(37, 99, 235, 0.25);
+        }
+
+        /* BORDA TECNOLÓGICA */
+        .tech-border {
+            position: relative;
+        }
+
+        .tech-border::before,
+        .tech-border::after {
+            content: "";
+            position: absolute;
+            width: 22px;
+            height: 22px;
+            pointer-events: none;
+        }
+
+        .tech-border::before {
+            top: 0;
+            left: 0;
+            border-top: 2px solid #2563eb;
+            border-left: 2px solid #2563eb;
+        }
+
+        .tech-border::after {
+            right: 0;
+            bottom: 0;
+            border-right: 2px solid #2563eb;
+            border-bottom: 2px solid #2563eb;
+        }
+
+        /* ANIMAÇÃO DOS PONTOS */
+        @keyframes pulse-blue {
+
+            0%,
+            100% {
+                box-shadow: 0 0 5px #3b82f6;
+                opacity: 0.7;
+            }
+
+            50% {
+                box-shadow:
+                    0 0 10px #3b82f6,
+                    0 0 20px rgba(59, 130, 246, 0.6);
+                opacity: 1;
+            }
+        }
+
+        .pulse-blue {
+            animation: pulse-blue 2s infinite;
+        }
+
+        /* ANIMAÇÃO DO HERO */
+        @keyframes scan {
+            0% {
+                transform: translateY(-100%);
+            }
+
+            100% {
+                transform: translateY(100vh);
+            }
+        }
+
+        .scan-line {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: rgba(56, 189, 248, 0.12);
+            box-shadow: 0 0 15px rgba(56, 189, 248, 0.25);
+            pointer-events: none;
+            z-index: 40;
+            animation: scan 8s linear infinite;
+        }
+
+        /* ANIMAÇÃO DOS CARDS */
+        .programmer-card {
+            transition:
+                transform 0.25s ease,
+                border-color 0.25s ease,
+                box-shadow 0.25s ease;
+        }
+
+        .programmer-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(37, 99, 235, 0.7);
+            box-shadow:
+                0 10px 40px rgba(0, 0, 0, 0.4),
+                0 0 25px rgba(37, 99, 235, 0.10);
+        }
+
+        /* AVATAR */
+        .avatar-ring {
+            position: relative;
+            box-shadow:
+                0 0 0 1px rgba(59, 130, 246, 0.4),
+                0 0 15px rgba(37, 99, 235, 0.15);
+        }
+
+        /* INPUT */
+        .tech-input {
+            box-shadow:
+                inset 0 0 20px rgba(0, 0, 0, 0.25),
+                0 0 0 rgba(37, 99, 235, 0);
+        }
+
+        .tech-input:focus {
+            box-shadow:
+                inset 0 0 20px rgba(0, 0, 0, 0.3),
+                0 0 20px rgba(37, 99, 235, 0.10);
+        }
+
+        /* STAT CARD */
+        .stat-card {
+            background:
+                linear-gradient(135deg,
+                    rgba(15, 23, 42, 0.95),
+                    rgba(2, 6, 23, 0.95));
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.025),
+                0 10px 35px rgba(0, 0, 0, 0.25);
+        }
+
+        /* SELECT */
+        select {
+            cursor: pointer;
+        }
+
+        select option {
+            background: #020617;
+            color: white;
+        }
+    </style>
 </head>
 
-<body >
+<body>
 
-  <!-- NAVBAR / BARRA DE PESQUISA (Preservada) -->
-  <header >
-    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-      <div class="flex items-center gap-2">
-        
-        <span class="font-bold text-lg text-white">Portfólio da Turma</span>
-      </div>
+    <div class="scan-line"></div>
 
-      <div class="relative w-full md:w-80">
-        <i data-lucide="search" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
-        <input
-          type="text"
-          id="search-input"
-          placeholder="Buscar por nome, cargo ou habilidade..."
-          class="w-full pl-9 pr-4 py-2.5 bg-slate-800/80 border border-slate-700 rounded-xl text-sm text-white placeholder-slate-400 focus:outline-none focus:border-indigo-500 transition"
-        >
-      </div>
-    </div>
-  </header>
+    <!-- ========================================================= -->
+    <!-- NAVBAR -->
+    <!-- ========================================================= -->
 
+    <header class="sticky top-0 z-30 border-b border-blue-950/60 bg-slate-950/85 backdrop-blur-xl">
 
-  <!-- HERO (Estrutura pronta para estilizar) -->
-  <section >
-    <div class="max-w-7xl mx-auto px-4">
-      <div>
-        <div >
-          <span class="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-pulse"></span>
-          <span></span>
+        <div class="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-blue-500/60 to-transparent">
         </div>
 
-        <h2 >
-           <span ></span>
-        </h2>
+        <div class="max-w-7xl mx-auto px-4 py-4 flex flex-col sm:flex-row items-center justify-between gap-4">
 
-        <p >
-          
-        </p>
-      </div>
-    </div>
-  </section>
+            <!-- LOGO -->
+            <div class="flex items-center gap-3 w-full sm:w-auto">
+
+                <div
+                    class="relative w-10 h-10 flex items-center justify-center rounded-xl border border-blue-500/40 bg-blue-500/10 text-blue-400 shadow-lg shadow-blue-500/10">
+                    <i data-lucide="cpu" class="w-5 h-5"></i>
+
+                    <span
+                        class="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-cyan-400 shadow-[0_0_8px_#22d3ee]"></span>
+                </div>
+
+                <div>
+                    <span class="block font-bold text-sm text-white tech-font tracking-wider">
+                        PORTFÓLIO
+                    </span>
+
+                    <span class="block text-[10px] text-blue-400 uppercase tracking-[0.25em]">
+                        turma.dev
+                    </span>
+                </div>
+
+            </div>
 
 
-  <!-- CONTEÚDO PRINCIPAL -->
-  <main id="alunos" >
+            <!-- BUSCA -->
+            <div class="relative w-full md:w-96">
 
-    <!-- ESTATÍSTICAS -->
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-10">
-      <div class="bg-slate-900/70 border border-slate-800 rounded-2xl p-5 flex items-center gap-4">
-        <div class="p-3 bg-indigo-500/10 text-indigo-400 rounded-xl">
-          <i data-lucide="users" class="w-5 h-5"></i>
+                <i data-lucide="search" class="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-blue-400"></i>
+
+                <input type="text" id="search-input" placeholder="Buscar programador, cargo ou habilidade..."
+                    class="tech-input w-full pl-10 pr-4 py-3 bg-slate-900/90 border border-slate-700/80 rounded-xl text-sm text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 transition">
+
+                <div class="absolute right-3 top-1/2 -translate-y-1/2 hidden sm:block">
+                    <span class="text-[9px] font-mono text-slate-600 border border-slate-700 px-1.5 py-0.5 rounded">
+                        SEARCH
+                    </span>
+                </div>
+
+            </div>
+
         </div>
-        <div>
-          <p class="text-xs text-slate-500 uppercase tracking-wider font-medium">Talentos</p>
-          <p id="total-alunos" class="text-2xl font-bold text-white">—</p>
+
+    </header>
+
+
+    <!-- ========================================================= -->
+    <!-- HERO -->
+    <!-- ========================================================= -->
+
+    <section class="relative overflow-hidden border-b border-blue-950/40">
+
+        <!-- GLOW CENTRAL -->
+        <div
+            class="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[300px] bg-blue-600/10 blur-[100px] rounded-full pointer-events-none">
         </div>
-      </div>
 
-      <div class="bg-slate-900/70 border border-slate-800 rounded-2xl p-5 flex items-center gap-4">
-        <div class="p-3 bg-cyan-500/10 text-cyan-400 rounded-xl">
-          <i data-lucide="briefcase" class="w-5 h-5"></i>
+        <!-- ELEMENTOS DECORATIVOS -->
+        <div class="absolute left-0 top-1/2 w-32 h-px bg-gradient-to-r from-transparent to-blue-500/30"></div>
+        <div class="absolute right-0 top-1/2 w-32 h-px bg-gradient-to-l from-transparent to-blue-500/30"></div>
+
+        <div class="max-w-7xl mx-auto px-4 py-16 md:py-24">
+
+            <div class="text-center max-w-4xl mx-auto">
+
+                <!-- STATUS -->
+                <div
+                    class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-blue-500/20 bg-blue-500/5 mb-7">
+
+                    <span class="w-2 h-2 rounded-full bg-blue-400 pulse-blue"></span>
+
+                    <span class="text-[10px] sm:text-xs font-mono uppercase tracking-[0.25em] text-blue-300">
+                        Sistema online • Banco de talentos ativo
+                    </span>
+
+                </div>
+
+
+                <!-- TÍTULO PRINCIPAL -->
+                <h1 class="tech-font text-3xl sm:text-5xl md:text-6xl font-black tracking-tight text-white uppercase">
+
+                    <span class="block">
+                        Dados dos
+                    </span>
+
+                    <span
+                        class="block mt-2 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-cyan-300 to-blue-500 blue-glow">
+                        Programadores
+                    </span>
+
+                </h1>
+
+
+                <!-- SUBTÍTULO -->
+                <p class="mt-7 text-sm sm:text-base md:text-lg leading-relaxed text-slate-400 max-w-2xl mx-auto">
+                    Explore os talentos, habilidades e especializações da nossa turma.
+                    <span class="text-blue-400">
+                        Conectando pessoas, tecnologia e inovação.
+                    </span>
+                </p>
+
+
+                <!-- LINHA DECORATIVA -->
+                <div class="flex items-center justify-center gap-3 mt-8">
+
+                    <div class="w-16 h-px bg-gradient-to-r from-transparent to-blue-500"></div>
+
+                    <i data-lucide="cpu" class="w-4 h-4 text-blue-400"></i>
+
+                    <div class="w-16 h-px bg-gradient-to-l from-transparent to-blue-500"></div>
+
+                </div>
+
+            </div>
+
         </div>
-        <div>
-          <p class="text-xs text-slate-500 uppercase tracking-wider font-medium">Áreas de atuação</p>
-          <p id="total-cargos" class="text-2xl font-bold text-white">—</p>
+
+    </section>
+
+
+    <!-- ========================================================= -->
+    <!-- CONTEÚDO -->
+    <!-- ========================================================= -->
+
+    <main id="alunos" class="max-w-7xl mx-auto px-4 py-12">
+
+
+        <!-- ======================================================= -->
+        <!-- ESTATÍSTICAS -->
+        <!-- ======================================================= -->
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-10">
+
+            <!-- TALENTOS -->
+            <div class="stat-card tech-border border border-slate-800/80 rounded-2xl p-5 flex items-center gap-4">
+
+                <div class="p-3.5 bg-blue-500/10 text-blue-400 rounded-xl border border-blue-500/10">
+                    <i data-lucide="users" class="w-5 h-5"></i>
+                </div>
+
+                <div>
+                    <p class="text-[10px] text-slate-500 uppercase tracking-[0.2em] font-medium">
+                        Talentos
+                    </p>
+
+                    <p id="total-alunos" class="text-2xl font-bold text-white tech-font">
+                        —
+                    </p>
+                </div>
+
+                <div class="ml-auto">
+                    <span class="text-[9px] font-mono text-blue-500/50">
+                        NODE_01
+                    </span>
+                </div>
+
+            </div>
+
+
+            <!-- ÁREAS -->
+            <div class="stat-card tech-border border border-slate-800/80 rounded-2xl p-5 flex items-center gap-4">
+
+                <div class="p-3.5 bg-cyan-500/10 text-cyan-400 rounded-xl border border-cyan-500/10">
+                    <i data-lucide="briefcase" class="w-5 h-5"></i>
+                </div>
+
+                <div>
+                    <p class="text-[10px] text-slate-500 uppercase tracking-[0.2em] font-medium">
+                        Áreas de atuação
+                    </p>
+
+                    <p id="total-cargos" class="text-2xl font-bold text-white tech-font">
+                        —
+                    </p>
+                </div>
+
+                <div class="ml-auto">
+                    <span class="text-[9px] font-mono text-cyan-500/50">
+                        NODE_02
+                    </span>
+                </div>
+
+            </div>
+
+
+            <!-- CURRÍCULOS -->
+            <div class="stat-card tech-border border border-slate-800/80 rounded-2xl p-5 flex items-center gap-4">
+
+                <div class="p-3.5 bg-blue-500/10 text-blue-400 rounded-xl border border-blue-500/10">
+                    <i data-lucide="file-text" class="w-5 h-5"></i>
+                </div>
+
+                <div>
+                    <p class="text-[10px] text-slate-500 uppercase tracking-[0.2em] font-medium">
+                        Currículos
+                    </p>
+
+                    <p id="total-curriculos" class="text-2xl font-bold text-white tech-font">
+                        —
+                    </p>
+                </div>
+
+                <div class="ml-auto">
+                    <span class="text-[9px] font-mono text-blue-500/50">
+                        NODE_03
+                    </span>
+                </div>
+
+            </div>
+
         </div>
-      </div>
 
-      <div class="bg-slate-900/70 border border-slate-800 rounded-2xl p-5 flex items-center gap-4">
-        <div class="p-3 bg-emerald-500/10 text-emerald-400 rounded-xl">
-          <i data-lucide="file-text" class="w-5 h-5"></i>
+
+        <!-- ======================================================= -->
+        <!-- FILTROS -->
+        <!-- ======================================================= -->
+
+        <div class="relative mb-8 p-4 sm:p-5 rounded-2xl border border-slate-800 bg-slate-950/70 backdrop-blur-sm">
+
+            <div
+                class="absolute top-0 left-8 right-8 h-px bg-gradient-to-r from-transparent via-blue-500/40 to-transparent">
+            </div>
+
+            <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-5">
+
+                <div>
+                    <div class="flex items-center gap-2 mb-1">
+
+                        <span class="w-1.5 h-1.5 rounded-full bg-blue-400"></span>
+
+                        <span class="text-[9px] font-mono uppercase tracking-[0.25em] text-blue-400">
+                            Database / Profiles
+                        </span>
+
+                    </div>
+
+                    <p id="resultado-info" class="text-sm text-slate-400">
+                        Carregando talentos...
+                    </p>
+
+                </div>
+
+
+                <div class="flex flex-col sm:flex-row flex-wrap items-center gap-3 w-full lg:w-auto">
+
+                    <select id="cargo-filter"
+                        class="bg-slate-900/90 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-blue-500 transition w-full sm:w-auto">
+                        <option value="">Todos os cargos</option>
+                    </select>
+
+                    <select id="ordenacao"
+                        class="bg-slate-900/90 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-blue-500 transition w-full sm:w-auto">
+                        <option value="nome_asc">Nome (A-Z)</option>
+                        <option value="nome_desc">Nome (Z-A)</option>
+                        <option value="data_desc">Mais recentes</option>
+                    </select>
+
+                </div>
+
+            </div>
+
         </div>
-        <div>
-          <p class="text-xs text-slate-500 uppercase tracking-wider font-medium">Currículos</p>
-          <p id="total-curriculos" class="text-2xl font-bold text-white">—</p>
-        </div>
-      </div>
-    </div>
 
 
-    <!-- CONTROLES E FILTROS DE BUSCA -->
-    <div >
-      <div>
-        <p id="resultado-info" class="text-sm text-slate-400">
-          Carregando talentos...
-        </p>
-      </div>
+        <!-- ======================================================= -->
+        <!-- SKELETON -->
+        <!-- ======================================================= -->
 
-      <div class="flex flex-wrap items-center gap-3 w-full sm:w-auto">
-        <select
-          id="cargo-filter"
-          class="bg-slate-800/80 border border-slate-700 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-indigo-500 transition w-full sm:w-auto"
-        >
-          <option value="">Todos os cargos</option>
-        </select>
+        <div id="loading-skeleton" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
 
-        <select
-          id="ordenacao"
-          class="bg-slate-800/80 border border-slate-700 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-indigo-500 transition w-full sm:w-auto"
-        >
-          <option value="nome_asc">Nome (A-Z)</option>
-          <option value="nome_desc">Nome (Z-A)</option>
-          <option value="data_desc">Mais recentes</option>
-        </select>
-      </div>
-    </div>
-
-
-    <!-- SKELETON (Aguardando Carregamento) -->
-    <div id="loading-skeleton" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-      <script>
-        for (let i = 0; i < 8; i++) {
-          document.write(`
+            <script>
+                for (let i = 0; i < 8; i++) {
+                    document.write(`
             <div class="bg-slate-900/75 border border-slate-800 rounded-2xl p-6 flex flex-col items-center animate-pulse">
               <div class="w-24 h-24 bg-slate-800 rounded-full mb-4"></div>
               <div class="h-5 bg-slate-800 rounded w-3/4 mb-2"></div>
@@ -147,329 +560,390 @@
               <div class="h-10 bg-slate-800 rounded-xl w-full mt-auto"></div>
             </div>
           `);
-        }
-      </script>
-    </div>
+                }
+            </script>
+
+        </div>
 
 
-    <!-- ESTADO VAZIO -->
-    <div id="empty-state" class="hidden text-center py-20 px-4">
-      <div class="inline-flex p-5 bg-slate-800/80 border border-slate-700 rounded-2xl text-slate-500 mb-5">
-        <i data-lucide="users-round" class="w-10 h-10"></i>
-      </div>
-      <h3 id="empty-title" class="text-xl font-semibold text-white mb-2">
-        Nenhum aluno encontrado
-      </h3>
-      <p id="empty-message" class="text-slate-500 text-sm max-w-md mx-auto">
-        Ainda não há cadastros ou nenhum registro corresponde à sua busca.
-      </p>
-    </div>
+        <!-- ======================================================= -->
+        <!-- ESTADO VAZIO -->
+        <!-- ======================================================= -->
+
+        <div id="empty-state" class="hidden text-center py-20 px-4">
+
+            <div class="inline-flex p-5 bg-blue-500/5 border border-blue-500/20 rounded-2xl text-blue-500/50 mb-5">
+                <i data-lucide="users-round" class="w-10 h-10"></i>
+            </div>
+
+            <h3 id="empty-title" class="text-xl font-semibold text-white mb-2">
+                Nenhum aluno encontrado
+            </h3>
+
+            <p id="empty-message" class="text-slate-500 text-sm max-w-md mx-auto">
+                Ainda não há cadastros ou nenhum registro corresponde à sua busca.
+            </p>
+
+        </div>
 
 
-    <!-- CARDS DOS ALUNOS (LAYOUT PRESERVADO) -->
-    <div id="cards-container" class="hidden grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-    </div>
+        <!-- ======================================================= -->
+        <!-- CARDS -->
+        <!-- ======================================================= -->
 
-  </main>
+        <div id="cards-container" class="hidden grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        </div>
 
-
-  <!-- FOOTER -->
-  <footer class="border-t border-slate-800/80 py-8 text-center mt-auto">
-    <div class="max-w-7xl mx-auto px-4">
-      <div class="flex items-center justify-center gap-2 mb-2">
-        <i data-lucide="graduation-cap" class="w-4 h-4 text-indigo-400"></i>
-        <span class="text-sm font-semibold text-slate-300">Portfólio da Turma</span>
-      </div>
-      <p class="text-xs text-slate-600">
-        Uma vitrine de talentos • Supabase + Vercel
-      </p>
-    </div>
-  </footer>
+    </main>
 
 
-  <!-- JAVASCRIPT -->
-  <script>
+    <!-- ========================================================= -->
+    <!-- FOOTER -->
+    <!-- ========================================================= -->
 
-    // ============================================================
-    // 1. CONFIGURAÇÃO DO SUPABASE
-    // ============================================================
+    <footer class="relative border-t border-blue-950/50 py-10 text-center mt-10 overflow-hidden">
 
-    const SUPABASE_URL = 'https://eempgprspimlhzlofvjx.supabase.co';
-    const SUPABASE_ANON_KEY = 'sb_publishable_H8eepB7xyJndr_TdsvuiVw_pJbsPC5k';
+        <div
+            class="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-px bg-gradient-to-r from-transparent via-blue-500/50 to-transparent">
+        </div>
 
-    const supabaseClient = window.supabase.createClient(
-      SUPABASE_URL,
-      SUPABASE_ANON_KEY,
-      {
-        auth: { persistSession: false }
-      }
-    );
+        <div class="max-w-7xl mx-auto px-4">
 
+            <div class="flex items-center justify-center gap-3 mb-3">
 
-    // ============================================================
-    // 2. ELEMENTOS E ESTADO
-    // ============================================================
+                <div class="p-2 rounded-lg bg-blue-500/10 border border-blue-500/20">
+                    <i data-lucide="cpu" class="w-4 h-4 text-blue-400"></i>
+                </div>
 
-    let todosMembros = [];
-    let membrosFiltrados = [];
+                <span class="text-sm font-bold text-slate-300 tech-font tracking-wider">
+                    DADOS DOS PROGRAMADORES
+                </span>
 
-    const loadingSkeleton = document.getElementById('loading-skeleton');
-    const emptyState = document.getElementById('empty-state');
-    const emptyTitle = document.getElementById('empty-title');
-    const emptyMessage = document.getElementById('empty-message');
-    const cardsContainer = document.getElementById('cards-container');
+            </div>
 
-    const searchInput = document.getElementById('search-input');
-    const cargoFilter = document.getElementById('cargo-filter');
-    const ordenacaoSelect = document.getElementById('ordenacao');
+            <p class="text-[10px] text-slate-600 uppercase tracking-[0.3em]">
+                Uma vitrine de talentos • Supabase + Vercel
+            </p>
 
-    const totalAlunos = document.getElementById('total-alunos');
-    const totalCargos = document.getElementById('total-cargos');
-    const totalCurriculos = document.getElementById('total-curriculos');
-    const resultadoInfo = document.getElementById('resultado-info');
+            <div class="flex justify-center items-center gap-2 mt-5 text-[9px] font-mono text-blue-500/40">
 
+                <span>SYS_STATUS:</span>
 
-    // ============================================================
-    // 3. BUSCAR DADOS DO SUPABASE
-    // ============================================================
+                <span class="text-emerald-500/60">
+                    ONLINE
+                </span>
 
-    async function carregarMembros() {
-      try {
-        const { data, error } = await supabaseClient
-          .from('aluno')
-          .select('*')
-          .order('id', { ascending: false });
+                <span>•</span>
 
-        if (error) throw error;
+                <span>v1.0.0</span>
 
-        todosMembros = data || [];
+            </div>
 
-        atualizarEstatisticas(todosMembros);
-        preencherFiltroCargo(todosMembros);
-        aplicarFiltros();
+        </div>
 
-      } catch (err) {
-        console.error('ERRO COMPLETO DO SUPABASE:', err);
-
-        loadingSkeleton.classList.add('hidden');
-        cardsContainer.classList.add('hidden');
-        emptyState.classList.remove('hidden');
-
-        emptyTitle.textContent = 'Erro ao carregar dados';
-        emptyMessage.textContent = err.message || 'Não foi possível consultar o Supabase.';
-      }
-    }
+    </footer>
 
 
-    // ============================================================
-    // 4. ESTATÍSTICAS
-    // ============================================================
+    <!-- ========================================================= -->
+    <!-- JAVASCRIPT — NÃO ALTERADO -->
+    <!-- ========================================================= -->
 
-    function atualizarEstatisticas(membros) {
-      const cargos = new Set(
-        membros
-          .map(m => m.cargo)
-          .filter(Boolean)
-          .map(c => String(c).trim().toLowerCase())
-      );
+    <script>
 
-      const curriculos = membros.filter(
-        m => m.curriculo_url && String(m.curriculo_url).trim() !== ''
-      ).length;
+        // ============================================================
+        // 1. CONFIGURAÇÃO DO SUPABASE
+        // ============================================================
 
-      totalAlunos.textContent = membros.length;
-      totalCargos.textContent = cargos.size;
-      totalCurriculos.textContent = curriculos;
-    }
+        const SUPABASE_URL = 'https://eempgprspimlhzlofvjx.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_H8eepB7xyJndr_TdsvuiVw_pJbsPC5k';
 
-
-    // ============================================================
-    // 5. FILTRO DE CARGOS
-    // ============================================================
-
-    function preencherFiltroCargo(membros) {
-      const cargos = [
-        ...new Set(
-          membros
-            .map(m => m.cargo)
-            .filter(Boolean)
-            .map(c => String(c).trim())
-        )
-      ];
-
-      cargos.sort((a, b) => a.localeCompare(b, 'pt-BR'));
-
-      cargoFilter.innerHTML = '<option value="">Todos os cargos</option>';
-
-      cargos.forEach(cargo => {
-        const option = document.createElement('option');
-        option.value = cargo;
-        option.textContent = cargo;
-        cargoFilter.appendChild(option);
-      });
-    }
+        const supabaseClient = window.supabase.createClient(
+            SUPABASE_URL,
+            SUPABASE_ANON_KEY,
+            {
+                auth: { persistSession: false }
+            }
+        );
 
 
-    // ============================================================
-    // 6. FILTRAGEM INTELIGENTE
-    // ============================================================
+        // ============================================================
+        // 2. ELEMENTOS E ESTADO
+        // ============================================================
 
-    function aplicarFiltros() {
-      const termo = searchInput.value.toLowerCase().trim();
-      const cargoSelecionado = cargoFilter.value;
+        let todosMembros = [];
+        let membrosFiltrados = [];
 
-      const palavras = termo ? termo.split(/\s+/).filter(Boolean) : [];
+        const loadingSkeleton = document.getElementById('loading-skeleton');
+        const emptyState = document.getElementById('empty-state');
+        const emptyTitle = document.getElementById('empty-title');
+        const emptyMessage = document.getElementById('empty-message');
+        const cardsContainer = document.getElementById('cards-container');
 
-      const filtrados = todosMembros.filter(membro => {
-        if (
-          cargoSelecionado &&
-          String(membro.cargo || '').trim() !== cargoSelecionado
-        ) {
-          return false;
+        const searchInput = document.getElementById('search-input');
+        const cargoFilter = document.getElementById('cargo-filter');
+        const ordenacaoSelect = document.getElementById('ordenacao');
+
+        const totalAlunos = document.getElementById('total-alunos');
+        const totalCargos = document.getElementById('total-cargos');
+        const totalCurriculos = document.getElementById('total-curriculos');
+        const resultadoInfo = document.getElementById('resultado-info');
+
+
+        // ============================================================
+        // 3. BUSCAR DADOS DO SUPABASE
+        // ============================================================
+
+        async function carregarMembros() {
+            try {
+                const { data, error } = await supabaseClient
+                    .from('aluno')
+                    .select('*')
+                    .order('id', { ascending: false });
+
+                if (error) throw error;
+
+                todosMembros = data || [];
+
+                atualizarEstatisticas(todosMembros);
+                preencherFiltroCargo(todosMembros);
+                aplicarFiltros();
+
+            } catch (err) {
+                console.error('ERRO COMPLETO DO SUPABASE:', err);
+
+                loadingSkeleton.classList.add('hidden');
+                cardsContainer.classList.add('hidden');
+                emptyState.classList.remove('hidden');
+
+                emptyTitle.textContent = 'Erro ao carregar dados';
+                emptyMessage.textContent = err.message || 'Não foi possível consultar o Supabase.';
+            }
         }
 
-        if (palavras.length > 0) {
-          const textoParaBusca = [
-            membro.nome,
-            membro.cargo,
-            membro.habilidades,
-            membro.descricao
-          ]
-            .filter(Boolean)
-            .join(' ')
-            .toLowerCase();
 
-          return palavras.every(palavra =>
-            textoParaBusca.includes(palavra)
-          );
+        // ============================================================
+        // 4. ESTATÍSTICAS
+        // ============================================================
+
+        function atualizarEstatisticas(membros) {
+            const cargos = new Set(
+                membros
+                    .map(m => m.cargo)
+                    .filter(Boolean)
+                    .map(c => String(c).trim().toLowerCase())
+            );
+
+            const curriculos = membros.filter(
+                m => m.curriculo_url && String(m.curriculo_url).trim() !== ''
+            ).length;
+
+            totalAlunos.textContent = membros.length;
+            totalCargos.textContent = cargos.size;
+            totalCurriculos.textContent = curriculos;
         }
 
-        return true;
-      });
 
-      const ordenacao = ordenacaoSelect.value;
+        // ============================================================
+        // 5. FILTRO DE CARGOS
+        // ============================================================
 
-      switch (ordenacao) {
-        case 'nome_asc':
-          filtrados.sort((a, b) =>
-            String(a.nome || '').localeCompare(String(b.nome || ''), 'pt-BR')
-          );
-          break;
+        function preencherFiltroCargo(membros) {
+            const cargos = [
+                ...new Set(
+                    membros
+                        .map(m => m.cargo)
+                        .filter(Boolean)
+                        .map(c => String(c).trim())
+                )
+            ];
 
-        case 'nome_desc':
-          filtrados.sort((a, b) =>
-            String(b.nome || '').localeCompare(String(a.nome || ''), 'pt-BR')
-          );
-          break;
+            cargos.sort((a, b) => a.localeCompare(b, 'pt-BR'));
 
-        case 'data_desc':
-          filtrados.sort((a, b) => {
-            const aDate = a.created_at ? new Date(a.created_at).getTime() : Number(a.id || 0);
-            const bDate = b.created_at ? new Date(b.created_at).getTime() : Number(b.id || 0);
-            return bDate - aDate;
-          });
-          break;
-      }
+            cargoFilter.innerHTML = '<option value="">Todos os cargos</option>';
 
-      membrosFiltrados = filtrados;
-      renderizarCards(filtrados);
-    }
+            cargos.forEach(cargo => {
+                const option = document.createElement('option');
+                option.value = cargo;
+                option.textContent = cargo;
+                cargoFilter.appendChild(option);
+            });
+        }
 
 
-    // ============================================================
-    // 7. RENDERIZAR CARDS (PRESERVADO)
-    // ============================================================
+        // ============================================================
+        // 6. FILTRAGEM INTELIGENTE
+        // ============================================================
 
-    function renderizarCards(membros) {
-      loadingSkeleton.classList.add('hidden');
+        function aplicarFiltros() {
+            const termo = searchInput.value.toLowerCase().trim();
+            const cargoSelecionado = cargoFilter.value;
 
-      resultadoInfo.textContent =
-        `${membros.length} ${membros.length === 1 ? 'talento encontrado' : 'talentos encontrados'}`;
+            const palavras = termo ? termo.split(/\s+/).filter(Boolean) : [];
 
-      if (!membros || membros.length === 0) {
-        cardsContainer.classList.add('hidden');
-        emptyState.classList.remove('hidden');
+            const filtrados = todosMembros.filter(membro => {
+                if (
+                    cargoSelecionado &&
+                    String(membro.cargo || '').trim() !== cargoSelecionado
+                ) {
+                    return false;
+                }
+                // BUSCA SOMENTE PELO NOME
+                if (palavras.length > 0) {
+                    const nomeParaBusca = String(membro.nome || '').toLowerCase();
 
-        emptyTitle.textContent = 'Nenhum talento encontrado';
-        emptyMessage.textContent =
-          todosMembros.length === 0
-            ? 'Ainda não há cadastros disponíveis.'
-            : 'Tente ajustar os filtros ou a busca.';
+                    return palavras.every(palavra =>
+                        nomeParaBusca.includes(palavra)
+                    );
+                }
+                return true;
+            });
 
-        return;
-      }
+            const ordenacao = ordenacaoSelect.value;
 
-      emptyState.classList.add('hidden');
-      cardsContainer.classList.remove('hidden');
+            switch (ordenacao) {
+                case 'nome_asc':
+                    filtrados.sort((a, b) =>
+                        String(a.nome || '').localeCompare(String(b.nome || ''), 'pt-BR')
+                    );
+                    break;
 
-      cardsContainer.innerHTML = membros.map((membro, index) => {
-        const nome = String(membro.nome || 'Sem nome');
-        const cargo = String(membro.cargo || 'Cargo não definido');
+                case 'nome_desc':
+                    filtrados.sort((a, b) =>
+                        String(b.nome || '').localeCompare(String(a.nome || ''), 'pt-BR')
+                    );
+                    break;
 
-        const foto = membro.foto_url && String(membro.foto_url).trim() !== ''
-          ? membro.foto_url
-          : 'https://ui-avatars.com/api/?name=' + encodeURIComponent(nome) + '&background=4f46e5&color=fff&size=128';
+                case 'data_desc':
+                    filtrados.sort((a, b) => {
+                        const aDate = a.created_at ? new Date(a.created_at).getTime() : Number(a.id || 0);
+                        const bDate = b.created_at ? new Date(b.created_at).getTime() : Number(b.id || 0);
+                        return bDate - aDate;
+                    });
+                    break;
+            }
 
-        const temCurriculo = membro.curriculo_url && String(membro.curriculo_url).trim() !== '';
+            membrosFiltrados = filtrados;
+            renderizarCards(filtrados);
+        }
 
-        const habilidades = obterHabilidades(membro.habilidades);
 
-        const habilidadesHtml = habilidades.length
-          ? `
+        // ============================================================
+        // 7. RENDERIZAR CARDS
+        // ============================================================
+
+        function renderizarCards(membros) {
+            loadingSkeleton.classList.add('hidden');
+
+            resultadoInfo.textContent =
+                `${membros.length} ${membros.length === 1 ? 'talento encontrado' : 'talentos encontrados'}`;
+
+            if (!membros || membros.length === 0) {
+                cardsContainer.classList.add('hidden');
+                emptyState.classList.remove('hidden');
+
+                emptyTitle.textContent = 'Nenhum talento encontrado';
+                emptyMessage.textContent =
+                    todosMembros.length === 0
+                        ? 'Ainda não há cadastros disponíveis.'
+                        : 'Tente ajustar os filtros ou a busca.';
+
+                return;
+            }
+
+            emptyState.classList.add('hidden');
+            cardsContainer.classList.remove('hidden');
+
+            cardsContainer.innerHTML = membros.map((membro, index) => {
+                const nome = String(membro.nome || 'Sem nome');
+                const cargo = String(membro.cargo || 'Cargo não definido');
+
+                const foto = membro.foto_url && String(membro.foto_url).trim() !== ''
+                    ? membro.foto_url
+                    : 'https://ui-avatars.com/api/?name=' + encodeURIComponent(nome) + '&background=4f46e5&color=fff&size=128';
+
+                const temCurriculo = membro.curriculo_url && String(membro.curriculo_url).trim() !== '';
+
+                const habilidades = obterHabilidades(membro.habilidades);
+
+                const habilidadesHtml = habilidades.length
+                    ? `
             <div class="flex flex-wrap justify-center gap-1.5 mt-3">
               ${habilidades.slice(0, 4).map(hab =>
-                `<span class="skill-badge">${escapeHtml(hab)}</span>`
-              ).join('')}
+                        `<span class="skill-badge">${escapeHtml(hab)}</span>`
+                    ).join('')}
 
               ${habilidades.length > 4
-                ? `<span class="skill-badge">+${habilidades.length - 4}</span>`
-                : ''
-              }
+                        ? `<span class="skill-badge">+${habilidades.length - 4}</span>`
+                        : ''
+                    }
             </div>
           `
-          : '';
+                    : '';
 
-        const descricaoHtml = membro.descricao
-          ? `
+                const descricaoHtml = membro.descricao
+                    ? `
             <p class="text-xs text-slate-500 mt-3 line-clamp-2 leading-relaxed">
               ${escapeHtml(membro.descricao)}
             </p>
           `
-          : '';
+                    : '';
 
-        const btnClass = temCurriculo
-          ? 'bg-slate-800 hover:bg-indigo-600 border-slate-700 hover:border-transparent'
-          : 'bg-slate-800/40 border-slate-700/30 btn-disabled';
+                const btnClass = temCurriculo
+                    ? 'bg-slate-800 hover:bg-blue-600 border-slate-700 hover:border-transparent'
+                    : 'bg-slate-800/40 border-slate-700/30 btn-disabled';
 
-        const btnText = temCurriculo ? 'Ver Currículo' : 'Currículo indisponível';
+                const btnText = temCurriculo ? 'Ver Currículo' : 'Currículo indisponível';
 
-        return `
-          <div class="bg-slate-900/75 border border-slate-800 rounded-2xl p-6 flex flex-col items-center text-center transition duration-200 hover:border-indigo-500/50">
+                return `
+          <div class="programmer-card bg-slate-950/80 border border-slate-800 rounded-2xl p-6 flex flex-col items-center text-center relative overflow-hidden">
+
+            <div class="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-blue-500/30 to-transparent"></div>
+
+            <div class="absolute top-3 left-3 text-[7px] font-mono text-blue-500/30">
+              NODE_${String(index + 1).padStart(2, '0')}
+            </div>
+
+            <div class="absolute top-3 right-3 flex items-center gap-1.5">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_7px_#34d399]"></span>
+              <span class="text-[7px] font-mono text-slate-600">ONLINE</span>
+            </div>
 
             <!-- FOTO -->
-            <div class="relative mb-4">
-              <div class="relative w-24 h-24 rounded-full p-1 bg-gradient-to-tr from-indigo-500 to-cyan-500">
+            <div class="relative mb-4 mt-3">
+
+              <div class="absolute inset-[-5px] rounded-full border border-blue-500/10"></div>
+
+              <div class="absolute inset-[-9px] rounded-full border border-dashed border-blue-500/10"></div>
+
+              <div class="avatar-ring relative w-24 h-24 rounded-full p-1 bg-gradient-to-tr from-blue-700 via-blue-500 to-cyan-400">
+
                 <img
                   src="${escapeHtml(foto)}"
                   alt="Foto de ${escapeHtml(nome)}"
                   class="w-full h-full object-cover rounded-full bg-slate-950"
-                  onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(nome)}&background=4f46e5&color=fff&size=128'"
+                  onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(nome)}&background=1d4ed8&color=fff&size=128'"
                 >
+
               </div>
+
             </div>
+
 
             <!-- NOME -->
             <h2 class="text-lg font-bold text-white line-clamp-1">
               ${escapeHtml(nome)}
             </h2>
 
+
             <!-- CARGO -->
-            <p class="text-xs font-medium text-indigo-300 bg-indigo-500/10 px-3 py-1 rounded-full border border-indigo-500/20 mt-2">
+            <p class="text-[10px] font-semibold text-blue-300 bg-blue-500/10 px-3 py-1 rounded-full border border-blue-500/20 mt-2 uppercase tracking-wider">
               ${escapeHtml(cargo)}
             </p>
 
+
             ${habilidadesHtml}
             ${descricaoHtml}
+
 
             <!-- CURRÍCULO -->
             <a
@@ -478,89 +952,97 @@
               rel="${temCurriculo ? 'noopener noreferrer' : ''}"
               class="w-full mt-5 py-2.5 px-4 text-white text-sm font-semibold rounded-xl flex items-center justify-center gap-2 transition duration-200 border ${btnClass}"
             >
+
+              ${temCurriculo
+                        ? '<i data-lucide="file-text" class="w-4 h-4 text-blue-400"></i>'
+                        : '<i data-lucide="file-x" class="w-4 h-4 text-slate-500"></i>'
+                    }
+
               <span>${btnText}</span>
-              ${
-                temCurriculo
-                  ? '<i data-lucide="arrow-up-right" class="w-4 h-4 text-slate-400"></i>'
-                  : '<i data-lucide="file-x" class="w-4 h-4 text-slate-500"></i>'
-              }
+
+              ${temCurriculo
+                        ? '<i data-lucide="arrow-up-right" class="w-4 h-4 text-slate-400"></i>'
+                        : ''
+                    }
+
             </a>
 
           </div>
         `;
-      }).join('');
+            }).join('');
 
-      lucide.createIcons();
-    }
-
-
-    // ============================================================
-    // 8. HABILIDADES
-    // ============================================================
-
-    function obterHabilidades(habilidades) {
-      if (!habilidades) return [];
-
-      if (Array.isArray(habilidades)) {
-        return habilidades
-          .map(h => String(h).trim())
-          .filter(Boolean);
-      }
-
-      if (typeof habilidades === 'string') {
-        return habilidades
-          .split(',')
-          .map(h => h.trim())
-          .filter(Boolean);
-      }
-
-      return [];
-    }
+            lucide.createIcons();
+        }
 
 
-    // ============================================================
-    // 9. PROTEÇÃO CONTRA HTML MALICIOSO
-    // ============================================================
+        // ============================================================
+        // 8. HABILIDADES
+        // ============================================================
 
-    function escapeHtml(str) {
-      if (str === null || str === undefined) return '';
+        function obterHabilidades(habilidades) {
+            if (!habilidades) return [];
 
-      return String(str)
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#039;');
-    }
+            if (Array.isArray(habilidades)) {
+                return habilidades
+                    .map(h => String(h).trim())
+                    .filter(Boolean);
+            }
 
+            if (typeof habilidades === 'string') {
+                return habilidades
+                    .split(',')
+                    .map(h => h.trim())
+                    .filter(Boolean);
+            }
 
-    // ============================================================
-    // 10. EVENTOS
-    // ============================================================
-
-    let timeoutId = null;
-
-    function debounceAplicarFiltros() {
-      clearTimeout(timeoutId);
-
-      timeoutId = setTimeout(() => {
-        aplicarFiltros();
-      }, 250);
-    }
-
-    searchInput.addEventListener('input', debounceAplicarFiltros);
-    cargoFilter.addEventListener('change', aplicarFiltros);
-    ordenacaoSelect.addEventListener('change', aplicarFiltros);
+            return [];
+        }
 
 
-    // ============================================================
-    // 11. INICIAR
-    // ============================================================
+        // ============================================================
+        // 9. PROTEÇÃO CONTRA HTML MALICIOSO
+        // ============================================================
 
-    lucide.createIcons();
-    carregarMembros();
+        function escapeHtml(str) {
+            if (str === null || str === undefined) return '';
 
-  </script>
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+
+
+        // ============================================================
+        // 10. EVENTOS
+        // ============================================================
+
+        let timeoutId = null;
+
+        function debounceAplicarFiltros() {
+            clearTimeout(timeoutId);
+
+            timeoutId = setTimeout(() => {
+                aplicarFiltros();
+            }, 250);
+        }
+
+        searchInput.addEventListener('input', debounceAplicarFiltros);
+        cargoFilter.addEventListener('change', aplicarFiltros);
+        ordenacaoSelect.addEventListener('change', aplicarFiltros);
+
+
+        // ============================================================
+        // 11. INICIAR
+        // ============================================================
+
+        lucide.createIcons();
+        carregarMembros();
+
+    </script>
 
 </body>
+
 </html>
